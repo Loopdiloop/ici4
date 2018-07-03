@@ -1,0 +1,25 @@
+
+
+import constants as con
+
+""" Launch """
+#Thrust force:
+#thrust_force = 
+#thrust_time = 
+
+
+m_rocket = 2000 #kg
+
+#import spacepy
+
+
+from ffnet._tests import runtest
+runtest()
+
+
+
+
+
+
+
+

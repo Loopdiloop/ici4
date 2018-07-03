@@ -1,0 +1,30 @@
+latitute, altitude, long vs time
+
+TRBEM estimate xby,Bz
+max100nT 
+
+fit stuff
+
+yaw? attitude 
+rmzsquared
+
+measured against meauset 
+
+platform zeros
+
+
+
+fit! 
+
+median filters for getting rid of spikes.
+inpaint nan - inpainitn, matching  derivatives.
+
+
+
+2.5kHz data 
+
+
+13.30 each dy
+8-17
+
+
