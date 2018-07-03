@@ -29,10 +29,11 @@ if fetishing == True:
 run = generate()
 #run.remove_png()
 run.load()
-#run.calc_B()
+#run.set_range()
+run.calc_B()
 run.get_Bmodel()
 run.plot_magnetic() #'project_data.txt')
-#run.plot_position()
+run.plot_position()
 #run.set_range()
 #run.plot_magnetic()
 

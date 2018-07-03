@@ -101,13 +101,15 @@ class fetch():
             else:
                 asc_len = False
             f +=1
-        
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
         # LINEAR FIT FOR TIME, IS ALMOST PERFECT THO
         #translate T!!!1 + fill out (linearly)
         tt = spacepy.time.Ticktock(t)
+        print tt
+        
         #tt = tt.getUNX
         t = tt.TAI
+        print t
         t -= t[0] 
         t_abs = tt.TAI #IMPORTANTERER
         t_abs = np.linspace(t_abs[0], t_abs[-1], len(Bx))
@@ -157,17 +159,9 @@ class fetch():
             
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
         #translate T!!!1 + fill out (linearly)
-        '''tt = spacepy.time.Ticktock(t)
-        t = tt.TAI
-        t -= t[0] 
-        T = np.zeros(len(Bx))
-        for j in range(len(t)):
-            T[t_num[j]] = t[j]
-        minn = int(0.08*len(Bx))
-        T = np.linspace(T[0], np.max(T[-minn-100:-minn]), len(Bx)-minn)
-        '''
+
         print ' Read from file ', var.filename_pos
-        proj_data = np.array(t), np.array(theta_usr), np.array(phi_usr), np.array(lat), np.array(lon), np.array(alt), 
+        proj_data = np.array(t), np.array(theta_usr), np.array(phi_usr), np.array(lat), np.array(lon), np.array(alt)*1e-3, 
         np.save(var.dataname_pos, proj_data)
         print ' Saved in file ', var.dataname_pos
         return None 

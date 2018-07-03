@@ -23,7 +23,7 @@ dataname_B = '../data/project_data_B'
 dataname_pos = '../data/project_data_pos'
 
 dataname_dump = '../data/project_dumped'
-
+dataname_Bmodel_raw ='../data/project_Bmodel_raw'
 
 
 
@@ -31,8 +31,8 @@ dataname_dump = '../data/project_dumped'
 #For the Ticktock Bmodel
 #Copypaste from datafile: 
 date0 = '22:03:46.982095'
-date1 = '22:07:05.051936'
+date1 = '22:07:05.051936' #32
 
 
-
-
+#launchtime = '19.02.2015T22:06:41' #UTC
+launchtime = '2015-02-19T22:06:41' #ISO

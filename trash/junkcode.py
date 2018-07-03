@@ -4,6 +4,41 @@
 ###COPY
 
 
+
+        '''tt = spacepy.time.Ticktock(t)
+        t = tt.TAI
+        t -= t[0] 
+        T = np.zeros(len(Bx))
+        for j in range(len(t)):
+            T[t_num[j]] = t[j]
+        minn = int(0.08*len(Bx))
+        T = np.linspace(T[0], np.max(T[-minn-100:-minn]), len(Bx)-minn)
+        '''
+
+
+
+####### TICK TOCK MF
+
+        #t = spacepy.time.Ticktock(var.date0, 'ISO' )
+        #use TAI?
+
+        #t_mod = [] ; y = []
+        #for l in range(len(self.t_abs)):
+        #    if l // 300 == 0 :
+        #        t_mod.append(self.t_abs[l])
+        #        y.append(np.array([self.lon[l], self.lat[l], self.alt[l]]))
+        #t_mod = np.array(t_modd)
+
+        #TEST THIS SHIT
+        #ttt = spacepy.time.Ticktock(['2002-02-02T12:00:00', '2002-02-02T12:10:00'], 'ISO')
+        #yyy = coord.Coords([[3,0,0],[2,0,0]], 'GEO', 'car')
+        #fff = spacepy.irbempy.get_Bfield(ttt,yyy)
+        #print fff 
+        #sys.exit()
+
+#([self.alt, self.lat, self.lon], dtype='GDZ', carsph='sph')
+        #coord https://pythonhosted.org/SpacePy/quickstart.html
+
     def fetch_olddata(self): #, filename):
         '''Opens filename (*.asc) and saves it in an npy file.
         should be made more general.
