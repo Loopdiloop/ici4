@@ -17,7 +17,7 @@ from fetching import fetch
 
 t_start = time.time()
 
-fetishing = False
+fetishing = True
 
 
 if fetishing == True:
@@ -30,7 +30,7 @@ run = generate()
 #run.remove_png()
 run.load()
 #run.set_range()
-run.calc_B()
+#run.calc_B()
 run.get_Bmodel()
 run.plot_magnetic() #'project_data.txt')
 run.plot_position()

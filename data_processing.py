@@ -141,7 +141,7 @@ class generate():
         np.save(var.dataname_Bmodel_raw + spec_name, getB) #[getB['Blocal'], getB['Bvec']])
 
         return None
-
+        
     
     def plot_magnetic(self):
         additional = raw_input(' plotting magn. additional name: ')
@@ -151,8 +151,14 @@ class generate():
             plt.plot(self.t, Bs[n])
             plt.savefig('graphs/plot%s%s.png' % (additional,Bnames[n]))
             plt.clf()
+        
         plt.plot(self.t_pos, self.Bmodel)
         plt.savefig('graphs/plot%s%s.png' % (additional,'Bmodel'))
+        plt.clf()
+
+        plt.plot(self.t, self.B, 'r')
+        plt.plot(self.t_pos, self.Bmodel,'b')
+        plt.savefig('graphs/plot%s%s.png' % (additional,'BmodelB'))
         plt.clf()
         return None
         

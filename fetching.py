@@ -82,6 +82,8 @@ class fetch():
         t = [] ; t_num = []
         Bx = [] ; By = [] ; Bz = []
         
+        #print var.launch_TAI
+        
         # Read header info
         for i in range(var.header_length_B):
             files.readline()
@@ -104,21 +106,20 @@ class fetch():
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
         # LINEAR FIT FOR TIME, IS ALMOST PERFECT THO
         #translate T!!!1 + fill out (linearly)
-        tt = spacepy.time.Ticktock(t)
-        print tt
-        
-        #tt = tt.getUNX
-        t = tt.TAI
-        print t
-        t -= t[0] 
-        t_abs = tt.TAI #IMPORTANTERER
+        tick = spacepy.time.Ticktock(t)
+        tick2 = tick.TAI
+        n_launch = np.argmin(abs(tick2 - var.launch_TAI -1.))
+        tick3 = tick2[n_launch:]
+        t_abs = tick3
         t_abs = np.linspace(t_abs[0], t_abs[-1], len(Bx))
+
+        tick3 = tick3 - tick3[0] + 1.
         T = np.zeros(len(Bx))
         #for j in range(len(t)):
         #    T[t_num[j]] = t[j]
-        minn = int(0.08*len(Bx))
+        #minn = int(0.08*len(Bx))
         #T = np.linspace(T[0], np.max(T[-minn-100:-minn]), len(Bx)-minn)
-        T = np.linspace(T[0], np.max(t[-100: ]), len(Bx), dtype=float)
+        T = np.linspace(tick3[0], np.max(tick3[-100: ]), len(Bx), dtype=float)
         print ' Read from file ', var.filename_B
         
         proj_data = t_abs, T, np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)

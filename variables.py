@@ -1,7 +1,8 @@
 
 ''' Variables etc for data_processing0.py and run.py.
     Avoiding hardcoding this too bad. '''
-    
+
+import spacepy    
 
 
 #Save backupdata? 
@@ -35,4 +36,9 @@ date1 = '22:07:05.051936' #32
 
 
 #launchtime = '19.02.2015T22:06:41' #UTC
-launchtime = '2015-02-19T22:06:41' #ISO
+launch_ISO = '2015-02-19T22:06:41' #ISO
+launch_ticktock = spacepy.time.Ticktock(launch_ISO, 'ISO')
+launch_TAI = launch_ticktock.TAI
+
+
+
