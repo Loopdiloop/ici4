@@ -10,7 +10,7 @@ import sys
 import time
 
 # My own imports
-from data_processing0 import generate
+from data_processing import generate
 import variables as var
 from fetching import fetch
 
@@ -29,11 +29,12 @@ if fetishing == True:
 run = generate()
 #run.remove_png()
 run.load()
-run.calc_B()
+#run.calc_B()
+run.get_Bmodel()
 run.plot_magnetic() #'project_data.txt')
-run.plot_position()
-run.set_range()
-run.plot_magnetic()
+#run.plot_position()
+#run.set_range()
+#run.plot_magnetic()
 
 
 '''

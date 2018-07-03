@@ -12,6 +12,7 @@ from Tkinter import *
 import sys
 import os
 import spacepy
+from spacepy import coordinates as coord
 
 #from initiate 
 import variables as var
@@ -24,6 +25,7 @@ class generate():
         #self.all_data = ['self.date', 'self.t', 'Bx', 'By', 'Bz', 'IGRFx', 'IGRFy', 'IGRFz']
         #self.dataname = var.dataname 
         #os.mkdir('graphs')
+        self.range_set_done = False
         if not os.path.exists('graphs'):
             os.makedirs('graphs')
         return None
@@ -36,7 +38,7 @@ class generate():
         
 
     def load(self): #, name):
-        self.t, self.Bx, self.By, self.Bz = np.load(var.dataname_B+'.npy')
+        self.t_abs, self.t, self.Bx, self.By, self.Bz = np.load(var.dataname_B+'.npy')
         self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt = np.load(str(var.dataname_pos)+'.npy')
         self.B = np.zeros(len(self.Bx))
         self.Bmodel = np.zeros(len(self.Bx))
@@ -96,12 +98,23 @@ class generate():
         ''' Calculating theoretical B from models in IRBEMpy (spacepy) 
             based on lat, long and alt. Nothing more compleicated should 
             be neccecary '''
-        if range_set_done = True:
+        print ' Calculating Bmodel '
+        if self.range_set_done == True:
             print ''' Warning! You have changed the range. The Bmodel will not. Show caution'''
-        t = spacepy.Ticktock(var.dates, '') #Ticktock
-        y = spacepy.coordinates([lon, lat, alt], 'SPH') #coord
+        t = spacepy.time.Ticktock(var.date0, 'ISO' )
+        #self.t_abs, 'TAI') #Ticktock
+        print 't done'
+        #y = spacepy.coordinates.Coords([lon, lat, alt], 'SPH') 
+        #GZD 
+        y = coord.Coords([self.alt, self.lat, self.lon], dtype='GDZ', carsph='sph')
+        #coord https://pythonhosted.org/SpacePy/quickstart.html
+        print 'y done'
         Blocal, Bvec = spacepy.irbempy.get_Bfield(t,y)
-        self.Bmodel = 
+        print ' Bvec etc ok! :D '
+        print Bvec[:10]
+        print np.shape(Bvec), 'BB FELTIIIK'
+        sys.exit()
+        #self.Bmodel = 
     
     
     
@@ -131,12 +144,18 @@ class generate():
 
     def set_range(self):
         print ''' Setting range for (interesting)data '''
+        self.range_set_done = True
         start = raw_input(' Begin at time ')
         stopp = raw_input(' End at time ')
         print type(self.t)
         print  self.t - 3 
-        sta = np.argmin(abs(self.t - float(start)))
-        sto = np.argmin(abs(self.t - float(stopp)))
+        try:
+            sta = np.argmin(abs(self.t - float(start)))
+            sto = np.argmin(abs(self.t - float(stopp)))
+        except:
+            ''' Error. Went default. '''
+            sta = np.argmin(abs(self.t - 70.))
+            sto = np.argmin(abs(self.t - 250.))
         print len(self.t)
         self.t = self.t[sta:sto]
         self.Bx = self.Bx[sta:sto]

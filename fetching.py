@@ -101,13 +101,16 @@ class fetch():
             else:
                 asc_len = False
             f +=1
-            
+        
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
         # LINEAR FIT FOR TIME, IS ALMOST PERFECT THO
         #translate T!!!1 + fill out (linearly)
         tt = spacepy.time.Ticktock(t)
+        #tt = tt.getUNX
         t = tt.TAI
         t -= t[0] 
+        t_abs = tt.TAI #IMPORTANTERER
+        t_abs = np.linspace(t_abs[0], t_abs[-1], len(Bx))
         T = np.zeros(len(Bx))
         #for j in range(len(t)):
         #    T[t_num[j]] = t[j]
@@ -116,7 +119,7 @@ class fetch():
         T = np.linspace(T[0], np.max(t[-100: ]), len(Bx), dtype=float)
         print ' Read from file ', var.filename_B
         
-        proj_data = T, np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)
+        proj_data = t_abs, T, np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)
         np.save(var.dataname_B, proj_data)
         print ' Saved in file ', var.dataname_B
         return None 
