@@ -14,6 +14,8 @@ import os
 import spacepy
 from spacepy import coordinates as coord
 import spacepy.datamodel as spacedatamodel
+import pywt
+import scipy.signal as sign
 
 #from initiate 
 import variables as var
@@ -43,6 +45,8 @@ class generate():
         self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt = np.load(str(var.dataname_pos)+'.npy')
         self.B = np.zeros(len(self.Bx))
         self.Bmodel = np.zeros(len(self.t_pos))
+        print np.shape(self.t), np.shape(self.Bx), np.size(self.t)
+        sys.exit()
         if len(self.t) == len(self.Bx):
             ' Length of t and Bx is equal. Proceed safely.'
         else:
@@ -95,12 +99,55 @@ class generate():
             self.B[i] = np.linalg.norm(BB[:,i])
         return None
     
-    def testB(self):
+    def fill_data(self):
+        #to find avg total in three 1D params
+        delta_avg = np.array([np.sum(abs(self.Bx - np.roll(self.Bx, 1)))/len(self.Bx),
+            np.sum(abs(self.By - np.roll(self.By, 1)))/len(self.By),
+            np.sum(abs(self.Bz - np.roll(self.Bz, 1)))/len(self.Bz) ])
+        #delta_avg /= len(self.Bx)
+        print delta_avg
+        sys.exit()
+        for m in [self.Bx, self.By, self.Bz]:
+            for j in range(var.fit_order):
+                deltas += var.fit_param[j]*(np.sum(abs(m - np.roll(m, j))) + np.sum(abs(m - np.roll(m, -j))))/(2*np.len(m))
+                
+                #if deltas >= deltas_tolerance:
+                    
+        avg_delta = np.sum([3,4])/len(self.Bx)
+        #while delta > var.deltafit:
+        print self.Bx[:10]
+        print np.roll(self.Bx[:10], 2)
+        sys.exit()
+
+
+        return None
+
+    def despike_extreme(self):
+        great = np.greater(self.By, 8.5e8)
+        less = np.greater(6.0e8, self.By)
+        extreme = great + less
+        for i in range(len(great)):
+            if extreme[i] == True:
+                self.Bx[i-1:i+1] = float('nan')
+                self.By[i-1:i+1] = float('nan')
+                self.Bz[i-1:i+1] = float('nan')
+        return None
+
+    def fit_Bmodel(self):
         
 
 
 
         return None
+
+    def median_filter(self):
+        self.Bx = sign.medfilt(self.Bx, kernel_size=15)
+
+
+
+
+        return None
+
 
     def get_Bmodel(self):
         ''' Calculating theoretical B from models in IRBEMpy (spacepy) 
@@ -113,16 +160,16 @@ class generate():
         y = np.array([self.alt, self.lat, self.lon])
         y = np.ndarray.transpose(y) #getting the right dimensions for get_Bfield
         y = coord.Coords(np.array(y), 'GDZ', 'sph') 
-        print 'y done'
-        print self.alt
+        #print 'y done'
+        #print self.alt
 
-        launch = spacepy.time.Ticktock(var.launchtime)
-        launchTAI = launch.TAI #convert to('TAI')
-        launchTAII = launchTAI + self.t_pos
-        T = spacepy.time.Ticktock(launchTAII, 'TAI')
+        #launch = spacepy.time.Ticktock(var.launch_TAI)
+        #launchTAI = launch.TAI #convert to('TAI')
+        launch_realtimeTAI = var.launch_TAI + self.t_pos
+        T = spacepy.time.Ticktock(launch_realtimeTAI, 'TAI')
         T = T.UTC
         t = spacepy.time.Ticktock(T, 'UTC' )
-        print t
+        #print t
         #sys.exit()
         
 
@@ -141,7 +188,7 @@ class generate():
         np.save(var.dataname_Bmodel_raw + spec_name, getB) #[getB['Blocal'], getB['Bvec']])
 
         return None
-        
+
     
     def plot_magnetic(self):
         additional = raw_input(' plotting magn. additional name: ')
@@ -149,7 +196,9 @@ class generate():
         Bnames = ['Bx', 'By', 'Bz', 'B']#, 'Bmodel']
         for n in range(len(Bnames)):
             plt.plot(self.t, Bs[n])
+            plt.title('Plot %s %s' % (additional,Bnames[n]))
             plt.savefig('graphs/plot%s%s.png' % (additional,Bnames[n]))
+            plt.show()
             plt.clf()
         
         plt.plot(self.t_pos, self.Bmodel)
@@ -212,12 +261,78 @@ class generate():
 
 
     def fft(self):
+        for m in [self.Bx, self.By, self.Bz, self.B]:
+            fft = (np.fft.rfft(m))
+            plt.plot(np.linspace(0,1,len(fft)), fft)
+            plt.show()
+            plt.clf
+        return None
+
+    def fft_2d(self):
         
-        #np.fft()
+        #for m in [self.Bx, self.By, self.Bz, self.B]:
+            #fft = (np.fft.rfft2(m))
+            #plt.pcolormesh(fft)
+            #plt.show()
+            #plt.clf
+        #plt.pcolormesh()
         return None
         
+    def wavelet(self):
+        #cA, cD = pywt.dwt(self.Bx, 'db2')
+        #x2 = pywt.idwt(cA, cD, 'db2')
+        #CA, CD = np.meshgrid(cA, cD)
+        #plt.pcolor(CA, CD, np.linspace(0,100,101))
+        #plt.show()
         
-        
+        '''
+        import pylab 
+        import scipy.io.wavfile as wavfile
+        x = self.Bx
+        # Find the highest power of two less than or equal to the input.
+        def lepow2(x):
+            return 2 ** floor(log2(x))
+
+        # Make a scalogram given an MRA tree.
+        def scalogram(data):
+            bottom = 0
+
+            vmin = min(map(lambda x: min(abs(x)), data))
+            vmax = max(map(lambda x: max(abs(x)), data))
+
+            gca().set_autoscale_on(False)
+
+            for row in range(0, len(data)):
+                scale = 2.0 ** (row - len(data))
+
+                imshow(
+                    array([abs(data[row])]),
+                    interpolation = 'nearest',
+                    vmin = vmin,
+                    vmax = vmax,
+                    extent = [0, 1, bottom, bottom + scale])
+
+                bottom += scale
+
+        # Load the signal, take the first channel, limit length to a power of 2 for simplicity.
+        rate, signal = wavfile.read('kitten.wav')
+        signal = signal[0:lepow2(len(signal)),0]
+        tree = pywt.wavedec(signal, 'db5')
+
+        # Plotting.
+        pylab.gray()
+        pylab.scalogram(tree)
+        pylab.show() '''
+
+        '''
+        from scipy import fftpack, ndimage
+        import matplotlib.pyplot as plt
+
+        image = ndimage.imread('image2.jpg', flatten=True)     # flatten=True gives a greyscale image
+        fft2 = fftpack.fft2(image)
+
+        plt.imshow(fft2)
+        plt.show() '''
         
         
         

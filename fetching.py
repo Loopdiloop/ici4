@@ -82,8 +82,6 @@ class fetch():
         t = [] ; t_num = []
         Bx = [] ; By = [] ; Bz = []
         
-        #print var.launch_TAI
-        
         # Read header info
         for i in range(var.header_length_B):
             files.readline()
@@ -103,26 +101,25 @@ class fetch():
             else:
                 asc_len = False
             f +=1
-        # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
-        # LINEAR FIT FOR TIME, IS ALMOST PERFECT THO
-        #translate T!!!1 + fill out (linearly)
-        tick = spacepy.time.Ticktock(t)
-        tick2 = tick.TAI
-        n_launch = np.argmin(abs(tick2 - var.launch_TAI -1.))
-        tick3 = tick2[n_launch:]
-        t_abs = tick3
-        t_abs = np.linspace(t_abs[0], t_abs[-1], len(Bx))
 
-        tick3 = tick3 - tick3[0] + 1.
-        T = np.zeros(len(Bx))
-        #for j in range(len(t)):
-        #    T[t_num[j]] = t[j]
-        #minn = int(0.08*len(Bx))
-        #T = np.linspace(T[0], np.max(T[-minn-100:-minn]), len(Bx)-minn)
-        T = np.linspace(tick3[0], np.max(tick3[-100: ]), len(Bx), dtype=float)
+        for i in range(len(t)):
+            t[i] = '2015-02-19T' + t[i]
+
+        Bx, By, Bz = np.array(Bx).astype(float), np.array(By).astype(float), np.array(Bz).astype(float)
+        
+        tick = spacepy.time.Ticktock(t, 'ISO')
+        tick = tick.TAI
+        T = np.linspace(tick[0], np.max(tick[-100: ]), len(Bx), dtype=float)
+
+        n_launch = np.argmin(abs(T - var.launch_TAI))
+
+        t_abs = T[n_launch:]
+        tick = T[n_launch:] - T[0]
+        Bx, By, Bz = Bx[n_launch:], By[n_launch:], Bz[n_launch:]      
         print ' Read from file ', var.filename_B
         
-        proj_data = t_abs, T, np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)
+        proj_data = [t_abs, tick, Bx, By, Bz]
+        #np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)
         np.save(var.dataname_B, proj_data)
         print ' Saved in file ', var.dataname_B
         return None 

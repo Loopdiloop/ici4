@@ -5,6 +5,39 @@
 
 
 
+
+        #T = np.zeros(len(Bx))
+        #t = np.array(tick3)
+
+        #for j in range(len(t)):
+        #    T[t_num[j]] = t[j]
+        #minn = int(0.08*len(Bx))
+        #T = np.linspace(T[0], np.max(T[-minn-100:-minn]), len(Bx)-minn)
+
+        '''t = np.array(tick2)
+        plt.plot(t, np.linspace(0,len(t),len(t)))
+        plt.show()
+        sys.exit()
+        '''
+
+
+        #plt.plot(By, tick3)
+        #plt.show()
+        #sys.exit()
+        #t_abs = tick3
+        #t_abs = np.linspace(t_abs[0], t_abs[-1], len(Bx)) #absolute length if wanted..
+
+        #tick3 = np.array(tick3) - float(tick[0]) + 1.
+
+        #T = np.linspace(tick3[0], np.max(tick3[-100: ]), len(Bx), dtype=float)
+        plt.plot(T, np.linspace(0, len(T), len(T)))
+        plt.show()
+        sys.exit()
+
+
+
+
+
         '''tt = spacepy.time.Ticktock(t)
         t = tt.TAI
         t -= t[0] 
