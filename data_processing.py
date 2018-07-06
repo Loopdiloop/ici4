@@ -22,6 +22,15 @@ import skimage.restoration as skres #for inpainting
 import variables as var
 
 
+
+
+
+
+
+
+
+
+
 class generate():
     def __init__(self):
         #self.all_data = ['self.date', 'self.t', 'Bx', 'By', 'Bz', 'IGRFx', 'IGRFy', 'IGRFz']
@@ -75,12 +84,21 @@ class generate():
         ans = raw_input('y/n ? ')
         if ans == 'y' or ans == 'Y':
             try:
-                os.remove('graphs/*.png')
+                os.remove('../graphs/*.png')
             except:
                 print ''' Yheaaa, I need to debug this one day.. '''
         else:
             print ' ok, nothing removed.'
         return None
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,7 +136,6 @@ class generate():
         self.Bz = sign.medfilt(self.Bz, kernel_size=var.med_kernz)
         return None
 
-
     def despike_extreme(self):
         great = np.greater(self.medx, var.desp_x_up) + np.greater(self.medy, var.desp_y_up) + np.greater(self.medz, var.desp_z_up)
         less = np.greater(var.desp_x_down, self.medx) + np.greater(var.desp_y_down, self.medy) + np.greater(var.desp_z_down, self.medz)
@@ -129,7 +146,6 @@ class generate():
                 self.By[i-1:i+1] = float('nan')
                 self.Bz[i-1:i+1] = float('nan')
         return None
-
 
     def inpaint(self):
         mask = np.zeros(len(self.By))
@@ -217,6 +233,24 @@ class generate():
         self.lon ; self.lat ; self.alt = self.lon[stap:stopp] ; self.lat[stap:stop] ; self.alt[stap:stop]
         print ''' New length of arrays: ''', len(self.t)
         return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     def plot_magnetic(self):

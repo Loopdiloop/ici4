@@ -114,7 +114,10 @@ class fetch():
         n_launch = np.argmin(abs(T - var.launch_TAI))
 
         t_abs = T[n_launch:]
+        #T = T[n_launch:] - var.launch_TAI
         tick = T[n_launch:] - T[0]
+        print tick
+        sys.exit()
         Bx, By, Bz = Bx[n_launch:], By[n_launch:], Bz[n_launch:]      
         print ' Read from file ', var.filename_B
         
@@ -158,8 +161,13 @@ class fetch():
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
         #translate T!!!1 + fill out (linearly)
 
+        t = np.array(t).astype(float)
+        #t += var.launch_TAI - var.t_B0_TAI
+
+
+
         print ' Read from file ', var.filename_pos
-        proj_data = np.array(t), np.array(theta_usr), np.array(phi_usr), np.array(lat), np.array(lon), np.array(alt)*1e-3, 
+        proj_data = t, np.array(theta_usr), np.array(phi_usr), np.array(lat), np.array(lon), np.array(alt)*1e-3, 
         np.save(var.dataname_pos, proj_data)
         print ' Saved in file ', var.dataname_pos
         return None 

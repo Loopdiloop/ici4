@@ -14,11 +14,9 @@ from data_processing import generate
 import variables as var
 from fetching import fetch
 
-
 t_start = time.time()
 
-fetishing = False
-
+fetishing = True
 
 if fetishing == True:
     F = fetch()
@@ -43,10 +41,6 @@ run.calc_B()
 run.plot_magnetic()
 
 
-
-
-
-
 #
 #run.plot_magnetic() 
 #'project_data.txt')
@@ -56,14 +50,6 @@ run.plot_magnetic()
 #run.fill_data()
 #run.set_range()
 #run.plot_magnetic()
-
-
-'''
-ran = generate()
-print 'cross fingers'
-ran.load() '''
-
-#print run.content
 
 t_end = time.time()
 t_tot = t_end - t_start
