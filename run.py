@@ -17,7 +17,7 @@ from fetching import fetch
 
 t_start = time.time()
 
-fetishing = True
+fetishing = False
 
 
 if fetishing == True:
@@ -30,11 +30,26 @@ run = generate()
 #run.remove_png()
 run.load()
 #run.set_range()
-run.despike_extreme()
+
+
 run.median_filter()
-run.calc_B()
+run.despike_extreme()
+run.inpaint()
+run.median_filter2()
+
 run.get_Bmodel()
-run.plot_magnetic() #'project_data.txt')
+run.calc_B()
+
+run.plot_magnetic()
+
+
+
+
+
+
+#
+#run.plot_magnetic() 
+#'project_data.txt')
 #run.plot_position()
 #run.wavelet()
 #run.despike()
@@ -55,7 +70,4 @@ t_tot = t_end - t_start
 print '%.1f seconds' % t_tot
 
 
-# For fitting of data-params:
-deltafit = 3 #delta allowed for finished fit
-fit_order = 5 #order of fittings. 5 = 0th to 4th order.
-fit_param = [1., 0.6, 0.3, 0.1, 0., 0., 0., ]
+

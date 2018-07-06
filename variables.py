@@ -45,8 +45,28 @@ launch_ISO = '2015-02-19T22:06:41' #ISO
 launch_ticktock = spacepy.time.Ticktock(launch_ISO, 'ISO')
 launch_TAI = launch_ticktock.TAI
 
-print 'TAI'
-print launch_TAI
-print t_B0_TAI, t_B1_TAI
+#print 'TAI'
+#print launch_TAI
+#print t_B0_TAI, t_B1_TAI
 
 
+# For fitting of data-params:
+deltafit = 3 #delta allowed for finished fit
+fit_order = 5 #order of fittings. 5 = 0th to 4th order.
+fit_param = [1., 0.6, 0.3, 0.1, 0., 0., 0., ]
+
+
+
+# Median filter:
+med_kernx = 41
+med_kerny = 41
+med_kernz = 41
+
+# For the despiking. Cut evertythgin that is 
+# spiking more than this in median data
+desp_x_up = 8e7
+desp_y_up = 7e7
+desp_z_up = 7e7
+desp_x_down = -8e7
+desp_y_down = -7e7
+desp_z_down = -7e7
