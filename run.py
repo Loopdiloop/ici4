@@ -16,8 +16,7 @@ from fetching import fetch
 
 t_start = time.time()
 
-fetishing = True
-
+fetishing = False
 if fetishing == True:
     F = fetch()
     F.B()
@@ -34,6 +33,7 @@ run.median_filter()
 run.despike_extreme()
 run.inpaint()
 run.median_filter2()
+run.plot_comparisons()
 
 run.get_Bmodel()
 run.calc_B()

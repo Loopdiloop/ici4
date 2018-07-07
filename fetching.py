@@ -117,7 +117,7 @@ class fetch():
         #T = T[n_launch:] - var.launch_TAI
         tick = T[n_launch:] - T[0]
         print tick
-        sys.exit()
+        #sys.exit()
         Bx, By, Bz = Bx[n_launch:], By[n_launch:], Bz[n_launch:]      
         print ' Read from file ', var.filename_B
         

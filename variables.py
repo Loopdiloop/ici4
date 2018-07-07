@@ -8,6 +8,9 @@ import spacepy
 #Save backupdata? 
 backupdata = False
 
+#Plot sammenlikning av for/etter div. median etc.
+plot_comparison = True
+
 # Original .asc file containing data. 
 filename_old = '../data/ICI4_magn_hires.asc'
 filename_B = '../data/190215_launch_fgm_xyz.asc'
@@ -25,8 +28,6 @@ dataname_pos = '../data/project_data_pos'
 
 dataname_dump = '../data/project_dumped'
 dataname_Bmodel_raw ='../data/project_Bmodel_raw'
-
-
 
 
 #For the Ticktock Bmodel
@@ -70,3 +71,7 @@ desp_z_up = 7e7
 desp_x_down = -8e7
 desp_y_down = -7e7
 desp_z_down = -7e7
+
+
+
+

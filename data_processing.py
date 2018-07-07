@@ -17,6 +17,7 @@ import spacepy.datamodel as spacedatamodel
 import pywt
 import scipy.signal as sign
 import skimage.restoration as skres #for inpainting
+import copy
 
 #from initiate 
 import variables as var
@@ -39,6 +40,8 @@ class generate():
         self.range_set_done = False
         if not os.path.exists('graphs'):
             os.makedirs('graphs')
+        if var.plot_comparison == True:
+            self.plot_comp = {}
         return None
         
     def help(self):
@@ -128,6 +131,8 @@ class generate():
         plt.savefig('graphs/plot%s%s.png' % ('medX', 'medianfilter'))
         #plt.show()
         plt.clf()
+        if var.plot_comparison == True:
+            self.plot_comp['median'] = copy.copy(self.medy)
         return None
 
     def median_filter2(self):
@@ -145,6 +150,9 @@ class generate():
                 self.Bx[i-1:i+1] = float('nan')
                 self.By[i-1:i+1] = float('nan')
                 self.Bz[i-1:i+1] = float('nan')
+        if var.plot_comparison == True:
+            self.plot_comp['despiked'] = copy.copy(self.By)
+            #self.sdsdsdsdsdsd ############################################
         return None
 
     def inpaint(self):
@@ -157,7 +165,11 @@ class generate():
         self.Bx = skres.inpaint_biharmonic(self.Bx, mask, multichannel=False)
         self.By = skres.inpaint_biharmonic(self.By, mask, multichannel=False)
         self.Bz = skres.inpaint_biharmonic(self.Bz, mask, multichannel=False)
+        if var.plot_comparison == True:
+            self.plot_comp['inpainted'] = copy.copy(self.By) #{'inpainted' : self.By }
         return None
+
+    
 
 
     def get_Bmodel(self):
@@ -284,6 +296,29 @@ class generate():
             plt.clf()
         plt.plot(self.lat, self.lon)
         plt.savefig('graphs/plot%s%s.png' % (additional,'latlon'))
+        plt.clf()
+        return None
+
+    def plot_comparisons(self):
+
+        fig, axs = plt.subplots(3, 1, sharex=True)
+        fig.subplots_adjust(hspace=0)
+
+        axs[0].plot(self.t, self.plot_comp['median'])
+        axs[0].set_xlim([680.50, 682.50])
+        #axs[0].set_ylim([7.3e8, 8.0e8])
+        axs[1].plot(self.t, self.plot_comp['despiked'])
+        axs[1].set_xlim([680.50, 682.50])
+        axs[1].set_ylim([7.3e8, 8.0e8])
+        axs[2].plot(self.t, self.plot_comp['inpainted'])
+        axs[2].set_xlim([680.50, 682.50])
+        axs[2].set_ylim([7.3e8, 8.0e8])
+
+        plt.title('Comparisons')
+        plt.xlabel('t[s]')
+        plt.ylabel('log(signal - median)')
+        plt.savefig('graphs/plot%s.png' % ('method_comparison'))
+        plt.show()
         plt.clf()
         return None
 
