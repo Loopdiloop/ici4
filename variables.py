@@ -26,8 +26,8 @@ dataname_old = '../data/project_data_old'
 dataname_B = '../data/project_data_B'
 dataname_pos = '../data/project_data_pos'
 
-dataname_dump = '../data/project_dumped'
-dataname_Bmodel_raw ='../data/project_Bmodel_raw'
+dataname_dump = '../dump_data/project_dumped'
+dataname_Bmodel_raw ='../dump_data/project_Bmodel_raw'
 
 
 #For the Ticktock Bmodel
@@ -59,9 +59,9 @@ fit_param = [1., 0.6, 0.3, 0.1, 0., 0., 0., ]
 
 
 # Median filter:
-med_kernx = 41
-med_kerny = 41
-med_kernz = 41
+med_kernx = 111 #41
+med_kerny = 111
+med_kernz = 111
 
 # For the despiking. Cut evertythgin that is 
 # spiking more than this in median data
@@ -73,8 +73,8 @@ desp_y_down = -2e7 #7e7
 desp_z_down = -2e7 #7e7
 
 #plot comparisons
-plot_comp_xlim = [680.50, 682.50]
-plot_comp_ylim = [7.3e8, 8.0e8]
+plot_comp_xlim = [1389000, 1396000] #[486.50, 488.25] #[680.50, 682.50]
+plot_comp_ylim = [7.4e8, 8.0e8]
 
 
 

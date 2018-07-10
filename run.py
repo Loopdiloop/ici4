@@ -16,7 +16,7 @@ from fetching import fetch
 
 t_start = time.time()
 
-fetishing = True
+fetishing = False
 if fetishing == True:
     F = fetch()
     F.B()
@@ -26,26 +26,28 @@ if fetishing == True:
 run = generate()
 #run.remove_png()
 run.load()
-#run.set_range()
 
 run.get_Bmodel()
-#run.set_range()
+
+run.set_range()
+
 run.median_filter()
 run.despike_extreme()
-#run.inpaint()
+run.inpaint()
 #run.median_filter2()
-#run.plot_comparisons()
 
+run.plot_comparisons()
 
 run.calc_B()
 
 run.plot_magnetic()
 
-
-#
 #run.plot_magnetic() 
-#'project_data.txt')
-run.plot_position()
+#run.plot_position()
+run.dump_to_file()
+
+
+
 #run.wavelet()
 #run.despike()
 #run.fill_data()

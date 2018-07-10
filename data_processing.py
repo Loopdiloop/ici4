@@ -31,6 +31,8 @@ class generate():
         self.range_set_done = False
         if not os.path.exists('graphs'):
             os.makedirs('graphs')
+        if not os.path.exists('dump_data'):
+            os.makedirs('dump_data')
         if var.plot_comparison == True:
             self.plot_comp = {}
         return None
@@ -46,6 +48,7 @@ class generate():
         self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt = np.load(str(var.dataname_pos)+'.npy')
         self.B = np.zeros(len(self.Bx))
         self.Bmodel = np.zeros(len(self.t_pos))
+        self.tick = np.array(range(len(self.Bx)))
         if len(self.t) == len(self.Bx):
             ' Length of t and Bx is equal. Proceed safely.'
         else:
@@ -68,7 +71,7 @@ class generate():
         print ' Dumping all data to file.'
         data = self.t, self.Bx, self.By, self.Bz, self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt, self.B, self.Bmodel
         print ' Filename = project_dumped*.pyn'
-        spec_name = str(raw_input(' * = '))
+        spec_name = 'test_sofar_inpainted' #str(raw_input(' * = '))
         np.save(var.dataname_dump + spec_name, data)
         return None
         
@@ -224,8 +227,8 @@ class generate():
     def set_range(self):
         print ''' Setting range for (interesting)data '''
         self.range_set_done = True
-        start = raw_input(' Begin at time ')
-        stopp = raw_input(' End at time ')
+        start = 70 #raw_input(' Begin at time ')
+        stopp = 600 #raw_input(' End at time ')
         try:
             stab = np.argmin(abs(self.t - float(start)))
             stob = np.argmin(abs(self.t - float(stopp)))
@@ -242,6 +245,7 @@ class generate():
         self.t = self.t[stab:stob]
         self.Bx, self.By, self.Bz = self.Bx[stab:stob], self.By[stab:stob], self.Bz[stab:stob]
         self.B, self.Bmodel = self.B[stab:stob], self.Bmodel[stab:stob]
+        self.tick = self.tick[stab:stob]
 
         self.t_abs = self.t_abs[stap:stop]
         self.lon = self.lon[stap:stop] ; self.lat = self.lat[stap:stop] ; self.alt = self.alt[stap:stop]
@@ -271,24 +275,26 @@ class generate():
 
 
     def plot_magnetic(self):
-        additional = raw_input(' plotting magn. additional name: ')
+        additional = 'test_inpaintfull' #raw_input(' plotting magn. additional name: ')
         Bs = [self.Bx, self.By, self.Bz, self.B] #, self.Bmodel]
         Bnames = ['Bx', 'By', 'Bz', 'B']#, 'Bmodel']
         for n in range(len(Bnames)):
             plt.plot(self.t, Bs[n])#, 'b-') #, '*')
             plt.title('Plot %s %s' % (additional,Bnames[n]))
             plt.savefig('graphs/plot%s%s.png' % (additional,Bnames[n]))
-            plt.show()
+            #plt.show()
             plt.clf()
-        
-        plt.plot(self.t_pos, self.Bmodel)
-        plt.savefig('graphs/plot%s%s.png' % (additional,'Bmodel'))
-        plt.clf()
 
-        plt.plot(self.t, self.B, 'r')
-        plt.plot(self.t_pos, self.Bmodel,'b') #is behind.. 
-        plt.savefig('graphs/plot%s%s.png' % (additional,'BmodelB'))
-        plt.clf()
+        print len(self.t_pos), len(self.Bmodel)
+        #plt.plot(self.t_pos, self.Bmodel)
+        #plt.savefig('graphs/plot%s%s.png' % (additional,'Bmodel'))
+        #plt.clf()
+
+        print len(self.t_pos), len(self.Bmodel)
+        #plt.plot(self.t, self.B, 'r')
+        #plt.plot(self.t_pos, self.Bmodel,'b') #is behind.. 
+        #plt.savefig('graphs/plot%s%s.png' % (additional,'BmodelB'))
+        #plt.clf()
         return 
         
     def plot_position(self):
@@ -312,32 +318,33 @@ class generate():
         fig.suptitle('Comparisons of raw data and stages of corrections.', fontsize=24)
         #fig.grid(color='r', linestyle='-', linewidth=2)
 
-        axs[0].plot(self.t, self.plot_comp_OG, label='Original data')
+        axs[0].plot(self.tick, self.plot_comp_OG, label='Original data')
         axs[0].set_xlim(var.plot_comp_xlim)
         axs[0].set_ylim([7.3e8, 8.0e8])
         axs[0].legend()
+        axs[0].grid('on')
 
-        axs[1].plot(self.t, self.plot_comp['median_minus_By'], label='Median - By')
+        axs[1].plot(self.tick, self.plot_comp['median_minus_By'], label='Median - By')
         axs[1].set_xlim(var.plot_comp_xlim)
-        axs[1].set_ylim([-2.5e5, 2e5])
+        axs[1].set_ylim([-1e9, 3.5e9])
         axs[1].legend()
         
-        axs[2].plot(self.t, self.plot_comp['despiked'], label='Despiked data')
+        axs[2].plot(self.tick, self.plot_comp['despiked'], label='Despiked data')
         axs[2].set_xlim(var.plot_comp_xlim)
         axs[2].set_ylim(var.plot_comp_ylim)
         axs[2].legend()
 
-        axs[3].plot(self.t, self.plot_comp['inpainted'], label='Inpainted')
+        axs[3].plot(self.tick, self.plot_comp['inpainted'], label='Inpainted')
         axs[3].set_xlim(var.plot_comp_xlim)
         axs[3].set_ylim(var.plot_comp_ylim)
         axs[3].legend()
 
         fig.text(0.95, 0.05, 'Preliminary results', fontsize=40, color='red', ha='right', va='bottom', alpha=0.3)
         axs[1].set_ylabel('Signal, nT (?)', fontsize=20)
-        plt.xlabel('Time after launch [s]', fontsize=20)
+        plt.xlabel('Ticks (approx. after launch)', fontsize=20)
         
         plt.savefig('graphs/plot%s.png' % ('method_comparison'))
-        plt.show()
+        #plt.show()
         plt.clf()
 
         return None
