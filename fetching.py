@@ -1,6 +1,5 @@
+
 ''' Fetching shit, this takes a lot of code... '''
-
-
 
 
 import numpy as np
@@ -114,15 +113,11 @@ class fetch():
         n_launch = np.argmin(abs(T - var.launch_TAI))
 
         t_abs = T[n_launch:]
-        #T = T[n_launch:] - var.launch_TAI
-        tick = T[n_launch:] - T[0]
-        print tick
-        #sys.exit()
+        tick = T[n_launch:] - var.launch_TAI 
         Bx, By, Bz = Bx[n_launch:], By[n_launch:], Bz[n_launch:]      
         print ' Read from file ', var.filename_B
         
         proj_data = [t_abs, tick, Bx, By, Bz]
-        #np.array(Bx, dtype=float), np.array(By, dtype=float), np.array(Bz, dtype=float)
         np.save(var.dataname_B, proj_data)
         print ' Saved in file ', var.dataname_B
         return None 
@@ -159,7 +154,6 @@ class fetch():
             f +=1
             
         # NEXT LINES OF CODE ARE UGLY AF PLS IGNORE MUST FIX LATER 
-        #translate T!!!1 + fill out (linearly)
 
         t = np.array(t).astype(float)
         #t += var.launch_TAI - var.t_B0_TAI

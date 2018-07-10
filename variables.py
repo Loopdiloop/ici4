@@ -65,13 +65,16 @@ med_kernz = 41
 
 # For the despiking. Cut evertythgin that is 
 # spiking more than this in median data
-desp_x_up = 8e7
-desp_y_up = 7e7
-desp_z_up = 7e7
-desp_x_down = -8e7
-desp_y_down = -7e7
-desp_z_down = -7e7
+desp_x_up = 2e7 #2000 #8e7
+desp_y_up = 2e7 #2000 #7e7
+desp_z_up = 2e7 #2000 #7e7
+desp_x_down = -2e7 #8e7
+desp_y_down = -2e7 #7e7
+desp_z_down = -2e7 #7e7
 
+#plot comparisons
+plot_comp_xlim = [680.50, 682.50]
+plot_comp_ylim = [7.3e8, 8.0e8]
 
 
 

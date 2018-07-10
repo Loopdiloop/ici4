@@ -18,6 +18,7 @@ import pywt
 import scipy.signal as sign
 import skimage.restoration as skres #for inpainting
 import copy
+import math
 
 #from initiate 
 import variables as var
@@ -25,18 +26,8 @@ import variables as var
 
 
 
-
-
-
-
-
-
-
 class generate():
     def __init__(self):
-        #self.all_data = ['self.date', 'self.t', 'Bx', 'By', 'Bz', 'IGRFx', 'IGRFy', 'IGRFz']
-        #self.dataname = var.dataname 
-        #os.mkdir('graphs')
         self.range_set_done = False
         if not os.path.exists('graphs'):
             os.makedirs('graphs')
@@ -60,11 +51,17 @@ class generate():
         else:
             ' This is not safe. Len t and len Bx are NOT EQUAL. Please concider pulling out.'
         #Save untouched copy of data???
-        if var.backupdata == True:
-            self.t = self.t0
-            self.Bx, self.By, self.Bz = self.Bx0, self.By0, self.Bz0
-        print ' Data loaded from files'
-        return None
+        #if var.backupdata == True:
+        #    self.t = self.t0
+        #    self.Bx, self.By, self.Bz = self.Bx0, self.By0, self.Bz0
+        if var.plot_comparison == True:
+            #self.plot_comp_OG = np.zeros(len(self.By))
+            #for i in range(len(self.By)):
+            #    self.plot_comp_OG[i] = self.By[i]
+            #self.plot_comp_OG = copy.deepcopy(self.By)
+            self.plot_comp_OG = copy.deepcopy(self.By)
+        print ' Data loaded from files' 
+        return None 
         
     def dump_to_file(self):
         '''Dump all data to file'''
@@ -112,7 +109,7 @@ class generate():
         self.B = np.zeros(np.size(self.Bx))
         BB = np.array((self.Bx, self.By, self.Bz))
         for i in range(len(self.B)):
-            self.B[i] = np.linalg.norm(BB[:,i])
+            self.B[i] = np.sqrt(self.Bx[i]**2 + self.By[i]**2 + self.Bz[i]**2)#np.linalg.norm(BB[:,i])
         return None
     
     def median_filter(self):
@@ -132,16 +129,18 @@ class generate():
         #plt.show()
         plt.clf()
         if var.plot_comparison == True:
-            self.plot_comp['median'] = copy.copy(self.medy)
+            self.plot_comp['median_minus_By'] = copy.deepcopy(self.medy)
         return None
 
     def median_filter2(self):
+        print ' median filter... '
         self.Bx = sign.medfilt(self.Bx, kernel_size=var.med_kernx)
         self.By = sign.medfilt(self.By, kernel_size=var.med_kerny)
         self.Bz = sign.medfilt(self.Bz, kernel_size=var.med_kernz)
         return None
 
     def despike_extreme(self):
+        print ' despiking..'
         great = np.greater(self.medx, var.desp_x_up) + np.greater(self.medy, var.desp_y_up) + np.greater(self.medz, var.desp_z_up)
         less = np.greater(var.desp_x_down, self.medx) + np.greater(var.desp_y_down, self.medy) + np.greater(var.desp_z_down, self.medz)
         extreme = great + less
@@ -151,22 +150,24 @@ class generate():
                 self.By[i-1:i+1] = float('nan')
                 self.Bz[i-1:i+1] = float('nan')
         if var.plot_comparison == True:
-            self.plot_comp['despiked'] = copy.copy(self.By)
+            self.plot_comp['despiked'] = copy.deepcopy(self.By)
             #self.sdsdsdsdsdsd ############################################
         return None
 
     def inpaint(self):
+        print ' Beginning inpainting. '
         mask = np.zeros(len(self.By))
         for i in range(len(self.By)):
-            if self.Bx[i] == float('nan') or self.By[i] == float('nan') or self. Bz[i] == float('nan'):
+            #if self.Bx[i] == float('nan') or self.By[i] == float('nan') or self.Bz[i] == float('nan'):
+            if math.isnan(self.Bx[i]) or math.isnan(self.By[i]) or math.isnan(self.Bz[i]):
                 mask[i] = 1
-        #np.where(Bx = nan) #unknown are 1, known are 0
-        #skimage.restoration.
-        self.Bx = skres.inpaint_biharmonic(self.Bx, mask, multichannel=False)
-        self.By = skres.inpaint_biharmonic(self.By, mask, multichannel=False)
-        self.Bz = skres.inpaint_biharmonic(self.Bz, mask, multichannel=False)
+
+        self.Bx = skres.inpaint_biharmonic(self.Bx, mask, multichannel=False) ; print ' Bx done'        
+        self.By = skres.inpaint_biharmonic(self.By, mask, multichannel=False) ; print ' By done'    
+        self.Bz = skres.inpaint_biharmonic(self.Bz, mask, multichannel=False) ; print ' Bz done'    
         if var.plot_comparison == True:
-            self.plot_comp['inpainted'] = copy.copy(self.By) #{'inpainted' : self.By }
+            self.plot_comp['inpainted'] = copy.deepcopy(self.By) #{'inpainted' : self.By }
+        print ' Inpainting done!'
         return None
 
     
@@ -194,7 +195,7 @@ class generate():
 
         self.Bmodel =  getB['Blocal']
         print ' Ran Bmodel. Dumping to file cause it takes TIME Give it a name.'
-        spec_name = str(raw_input(' * = '))
+        spec_name = 'testing' #str(raw_input(' * = '))
         np.save(var.dataname_Bmodel_raw + spec_name, getB)
         return None
 
@@ -232,17 +233,21 @@ class generate():
             stop = np.argmin(abs(self.t_pos - float(stopp)))
         except:
             ''' Error. Went default. '''
-            sta = np.argmin(abs(self.t - 70.))
-            sto = np.argmin(abs(self.t - 250.))
+            stab = np.argmin(abs(self.t - 70.))
+            stob = np.argmin(abs(self.t - 250.))
             stap = np.argmin(abs(self.t_pos - 70.))
             stop = np.argmin(abs(self.t_pos - 250.))
+        #print stap, stopp
         
-        self.t = self.t[sta:sto]
-        self.Bx ; self.By ; self.Bz = self.Bx[stab:stob] ; self.By[stab:stob] ; self.Bz[stab:stob]
-        self.B ; self.Bmodel= self.B[stab:stob] ; self.Bmodel[stab:stob]
+        self.t = self.t[stab:stob]
+        self.Bx, self.By, self.Bz = self.Bx[stab:stob], self.By[stab:stob], self.Bz[stab:stob]
+        self.B, self.Bmodel = self.B[stab:stob], self.Bmodel[stab:stob]
 
         self.t_abs = self.t_abs[stap:stop]
-        self.lon ; self.lat ; self.alt = self.lon[stap:stopp] ; self.lat[stap:stop] ; self.alt[stap:stop]
+        self.lon = self.lon[stap:stop] ; self.lat = self.lat[stap:stop] ; self.alt = self.alt[stap:stop]
+        if var.plot_comparison == True:
+            #By_og = copy.deepcopy(self.By_OG)
+            self.plot_comp_OG = self.plot_comp_OG[stab:stob]  #plot_comp['OG'][stab:stob]
         print ''' New length of arrays: ''', len(self.t)
         return None
 
@@ -270,7 +275,7 @@ class generate():
         Bs = [self.Bx, self.By, self.Bz, self.B] #, self.Bmodel]
         Bnames = ['Bx', 'By', 'Bz', 'B']#, 'Bmodel']
         for n in range(len(Bnames)):
-            plt.plot(self.t, Bs[n])#, '*')
+            plt.plot(self.t, Bs[n])#, 'b-') #, '*')
             plt.title('Plot %s %s' % (additional,Bnames[n]))
             plt.savefig('graphs/plot%s%s.png' % (additional,Bnames[n]))
             plt.show()
@@ -284,7 +289,7 @@ class generate():
         plt.plot(self.t_pos, self.Bmodel,'b') #is behind.. 
         plt.savefig('graphs/plot%s%s.png' % (additional,'BmodelB'))
         plt.clf()
-        return None
+        return 
         
     def plot_position(self):
         additional = raw_input(' plotting pos. additional name: ')
@@ -300,45 +305,45 @@ class generate():
         return None
 
     def plot_comparisons(self):
-
-        fig, axs = plt.subplots(3, 1, sharex=True)
+        
+        fig, axs = plt.subplots(4, 1, sharex=True)
         fig.subplots_adjust(hspace=0)
 
-        axs[0].plot(self.t, self.plot_comp['median'])
-        axs[0].set_xlim([680.50, 682.50])
-        #axs[0].set_ylim([7.3e8, 8.0e8])
-        axs[1].plot(self.t, self.plot_comp['despiked'])
-        axs[1].set_xlim([680.50, 682.50])
-        axs[1].set_ylim([7.3e8, 8.0e8])
-        axs[2].plot(self.t, self.plot_comp['inpainted'])
-        axs[2].set_xlim([680.50, 682.50])
-        axs[2].set_ylim([7.3e8, 8.0e8])
+        fig.suptitle('Comparisons of raw data and stages of corrections.', fontsize=24)
+        #fig.grid(color='r', linestyle='-', linewidth=2)
 
-        plt.title('Comparisons')
-        plt.xlabel('t[s]')
-        plt.ylabel('log(signal - median)')
+        axs[0].plot(self.t, self.plot_comp_OG, label='Original data')
+        axs[0].set_xlim(var.plot_comp_xlim)
+        axs[0].set_ylim([7.3e8, 8.0e8])
+        axs[0].legend()
+
+        axs[1].plot(self.t, self.plot_comp['median_minus_By'], label='Median - By')
+        axs[1].set_xlim(var.plot_comp_xlim)
+        axs[1].set_ylim([-2.5e5, 2e5])
+        axs[1].legend()
+        
+        axs[2].plot(self.t, self.plot_comp['despiked'], label='Despiked data')
+        axs[2].set_xlim(var.plot_comp_xlim)
+        axs[2].set_ylim(var.plot_comp_ylim)
+        axs[2].legend()
+
+        axs[3].plot(self.t, self.plot_comp['inpainted'], label='Inpainted')
+        axs[3].set_xlim(var.plot_comp_xlim)
+        axs[3].set_ylim(var.plot_comp_ylim)
+        axs[3].legend()
+
+        fig.text(0.95, 0.05, 'Preliminary results', fontsize=40, color='red', ha='right', va='bottom', alpha=0.3)
+        axs[1].set_ylabel('Signal, nT (?)', fontsize=20)
+        plt.xlabel('Time after launch [s]', fontsize=20)
+        
         plt.savefig('graphs/plot%s.png' % ('method_comparison'))
         plt.show()
         plt.clf()
+
         return None
 
 
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

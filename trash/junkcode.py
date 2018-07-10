@@ -6,6 +6,62 @@
 
 
 
+
+
+
+
+
+        #print 'y done'
+        #print self.alt
+
+        #launch = spacepy.time.Ticktock(var.launch_print)
+        #launchTAI = launch.TAI #convert to('TAI')
+        launch_realtimeTAI = var.launch_TAI + self.t_pos
+        T = spacepy.time.Ticktock(launch_realtimeTAI, 'TAI')
+        T = T.UTC
+        t = spacepy.time.Ticktock(T, 'UTC' )
+        
+
+        getB = spacepy.irbempy.get_Bfield(t,y, extMag='0')
+        print ' get_Bfield ran. '
+
+        self.Bmodel =  getB['Blocal']
+        #print len(self.alt), len(self.lat)
+        #print len(self.Bmodel), len(self.t), len(self.Bx), len(y), len(t), 'LENN'
+        #mydata = spacedatamodel.SpaceData(attrs={'Blocal'}) #: 'BigSat1'})
+        #print type(mydata), 'MYDATA' #data = dm.fromHDF5('test.h5')
+        #self.Bmodel = getB.Blocal
+
+
+
+
+
+
+
+
+        sys.exit()
+        #axs[0].set_yticks(np.arange(-0.9, 1.0, 0.4))
+        #axs[0].set_ylim(-1, 1)
+        #axs[1].set_yticks(np.arange(0.1, 1.0, 0.2))
+        #axs[1].set_ylim(0, 1)
+        #axs[2].set_yticks(np.arange(-0.9, 1.0, 0.4))
+        #axs[2].set_ylim(-1, 1)
+        
+        plt.savefig('graphs/plot%s%s.png' % ('medX', 'medianfilter'))
+        plt.clf()
+        sys.exit() 
+
+
+
+        plt.plot(self.t, self.medx)
+        plt.plot(self.t, self.medy)
+        plt.plot(self.t, self.medz)
+        plt.savefig('graphs/plot%s%s.png' % ('medX', 'medianfilter'))
+        plt.show()
+        plt.clf()
+        sys.exit()
+
+
         #T = np.zeros(len(Bx))
         #t = np.array(tick3)
 
