@@ -55,7 +55,7 @@ launch_TAI = launch_ticktock.TAI
 # For fitting of data-params:
 #deltafit = 3 #delta allowed for finished fit
 #fit_order = 5 #order of fittings. 5 = 0th to 4th order.
-fit_param = [1., 0.6, 0.3, 0.1, 0., 0., 0., ]
+fit_param = [1., 0.6, 30000, 0.1, 4., 40000., 5., 20, 4000 ]
 fit_niter = 1000
 fit_T = 50 
 fit_stepsize = 10000

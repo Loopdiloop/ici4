@@ -211,10 +211,31 @@ class generate():
         #Bx_dir = A[3]*self.By**2 + A[4]*self.By + A[5]
         #Bx_dir = A[6]*self.Bz**2 + A[7]*self.Bz + A[8]
         #fun = lambda ABC: ABC[0]*x**2  ABC[1]*x + ABC[2] - B_model_long
+        Bmodel_long = np.interp(self.t, self.t_pos, self.Bmodel)
+        #haha nope. wanna see something nasty? Keep readin the next few lines of code!
+        '''parameters = []
+        j = 0
+        for a0 in [5., 10, 100]:
+            for a1 in [5., 100]:
+                for a2 in [1000, 20000]:
+                    for a3 in [5., 10, 100]:
+                        for a4 in [5., 100]:
+                            for a5 in [1000, 20000]:
+                                for a6 in [5., 10, 100]:
+                                    for a7 in [5., 100]:
+                                        for a8 in [1000, 20000]: 
+                                            result = 0 
+                                            for i in range(len(self.Bx)):
+                                                result += np.sqrt(a0*self.Bx[i]**2 + a1*self.Bx[i] + a2 + a3*self.By[i]**2 + a4*self.By[i] + a5 + a6*self.Bz[i]**2 + a7*self.Bz[i] + a8) - Bmodel_long[i]
+                                            parameters.append([float(result), a0, a1, a2, a3, a4, a5, a6, a7, a8])
+                            print j
+                            j +=1 
+        print parameters
+        np.save('parameters, bruteforce', parameters)
+        '''
         minimize = lambda A: np.sqrt(A[0]*self.Bx**2 + A[1]*self.Bx + A[2] 
-            + A[3]*self.By**2 + A[4]*self.By + A[5] + A[6]*self.Bz**2 + A[7]*self.Bz + A[8])
-        #return C
-        res = scipy.optimize.basinhopping(var.minimize, A0, niter=1000, T=50 , stepsize=10000)
+            + A[3]*self.By**2 + A[4]*self.By + A[5] + A[6]*self.Bz**2 + A[7]*self.Bz + A[8]) - Bmodel_long
+        res = scipy.optimize.basinhopping(minimize, A0, niter=1000, T=50 , stepsize=10000)
         print res
         sys.exit()
 
