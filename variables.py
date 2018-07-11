@@ -3,6 +3,7 @@
     Avoiding hardcoding this too bad. '''
 
 import spacepy    
+import numpy as np
 
 
 #Save backupdata? 
@@ -52,10 +53,12 @@ launch_TAI = launch_ticktock.TAI
 
 
 # For fitting of data-params:
-deltafit = 3 #delta allowed for finished fit
-fit_order = 5 #order of fittings. 5 = 0th to 4th order.
+#deltafit = 3 #delta allowed for finished fit
+#fit_order = 5 #order of fittings. 5 = 0th to 4th order.
 fit_param = [1., 0.6, 0.3, 0.1, 0., 0., 0., ]
-
+fit_niter = 1000
+fit_T = 50 
+fit_stepsize = 10000
 
 
 # Median filter:
@@ -77,4 +80,5 @@ plot_comp_xlim = [1389000, 1396000] #[486.50, 488.25] #[680.50, 682.50]
 plot_comp_ylim = [7.4e8, 8.0e8]
 
 
+#function to minimize:
 

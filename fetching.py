@@ -96,6 +96,7 @@ class fetch():
                 Bx.append(ny[0]) ; By.append(ny[1]) ; Bz.append(ny[2])
             elif len(ny) == 4:
                 t.append(ny[0]) ; t_num.append(int(f))
+                
                 Bx.append(float(ny[1])) ; By.append(float(ny[2])) ; Bz.append(float(ny[3]))
             else:
                 asc_len = False
@@ -104,6 +105,18 @@ class fetch():
         for i in range(len(t)):
             t[i] = '2015-02-19T' + t[i]
 
+        '''
+        #print t_num
+        t_num = np.array(t_num).astype(float)
+        plt.plot(np.linspace(0,len(t_num), len(t_num)), t_num - np.linspace(0,t_num[-1], len(t_num)), '*')
+        #plt.show()
+        n = []
+        for i in range(len(t_num)-1):
+            n.append(t_num[i] - t_num[i+1])
+        n = np.array(n).astype(float)    
+        plt.plot(np.linspace(0,1,len(n)), n, '*')
+        #plt.show() '''
+        
         Bx, By, Bz = np.array(Bx).astype(float), np.array(By).astype(float), np.array(Bz).astype(float)
         
         tick = spacepy.time.Ticktock(t, 'ISO')

@@ -62,14 +62,14 @@ class generate():
             #for i in range(len(self.By)):
             #    self.plot_comp_OG[i] = self.By[i]
             #self.plot_comp_OG = copy.deepcopy(self.By)
-            self.plot_comp_OG = copy.deepcopy(self.By)
+            self.plot_comp['OG'] = copy.deepcopy(self.By)
         print ' Data loaded from files' 
         return None 
         
     def dump_to_file(self):
         '''Dump all data to file'''
         print ' Dumping all data to file.'
-        data = self.t, self.Bx, self.By, self.Bz, self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt, self.B, self.Bmodel
+        data = self.t, self.Bx, self.By, self.Bz, self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt, self.B, self.Bmodel, self.plot_comp
         print ' Filename = project_dumped*.pyn'
         spec_name = 'test_sofar_inpainted' #str(raw_input(' * = '))
         np.save(var.dataname_dump + spec_name, data)
@@ -77,9 +77,10 @@ class generate():
         
     def load_dumped_file(self):
         '''Loading all dumped data in a specific file'''
-        spec_name = raw_input('''Filename of dumped file to load. 
-             project_dumped*.pyn, * = ''')
+        spec_name = 'test_sofar_inpainted' #raw_input('''Filename of dumped file to load. 
+        #     project_dumped*.pyn, * = ''') # self.plot_comp
         self.t, self.Bx, self.By, self.Bz, self.t_pos, self.theta_usr, self.phi_usr, self.lat, self.lon, self.alt, self.B, self.Bmodel = np.load(var.dataname_dump + spec_name +'.npy')
+        self.tick = np.array(range(len(self.Bx)))
         return None
         
     def remove_png(self):
@@ -154,14 +155,12 @@ class generate():
                 self.Bz[i-1:i+1] = float('nan')
         if var.plot_comparison == True:
             self.plot_comp['despiked'] = copy.deepcopy(self.By)
-            #self.sdsdsdsdsdsd ############################################
         return None
 
     def inpaint(self):
         print ' Beginning inpainting. '
         mask = np.zeros(len(self.By))
         for i in range(len(self.By)):
-            #if self.Bx[i] == float('nan') or self.By[i] == float('nan') or self.Bz[i] == float('nan'):
             if math.isnan(self.Bx[i]) or math.isnan(self.By[i]) or math.isnan(self.Bz[i]):
                 mask[i] = 1
 
@@ -169,7 +168,7 @@ class generate():
         self.By = skres.inpaint_biharmonic(self.By, mask, multichannel=False) ; print ' By done'    
         self.Bz = skres.inpaint_biharmonic(self.Bz, mask, multichannel=False) ; print ' Bz done'    
         if var.plot_comparison == True:
-            self.plot_comp['inpainted'] = copy.deepcopy(self.By) #{'inpainted' : self.By }
+            self.plot_comp['inpainted'] = copy.deepcopy(self.By)
         print ' Inpainting done!'
         return None
 
@@ -205,6 +204,20 @@ class generate():
 
 
     def fit_Bmodel(self):
+        # 3rd order
+        A = np.zeros((9))
+        A0 = var.fit_param #np.array([2,3,4,5,6,7,2,4,1000])
+        #Bx_dir = A[0]*self.Bx**2 + A[1]*self.Bx + A[2]
+        #Bx_dir = A[3]*self.By**2 + A[4]*self.By + A[5]
+        #Bx_dir = A[6]*self.Bz**2 + A[7]*self.Bz + A[8]
+        #fun = lambda ABC: ABC[0]*x**2  ABC[1]*x + ABC[2] - B_model_long
+        minimize = lambda A: np.sqrt(A[0]*self.Bx**2 + A[1]*self.Bx + A[2] 
+            + A[3]*self.By**2 + A[4]*self.By + A[5] + A[6]*self.Bz**2 + A[7]*self.Bz + A[8])
+        #return C
+        res = scipy.optimize.basinhopping(var.minimize, A0, niter=1000, T=50 , stepsize=10000)
+        print res
+        sys.exit()
+
         '''
         #3rd order
         #A, B, C =
@@ -227,8 +240,8 @@ class generate():
     def set_range(self):
         print ''' Setting range for (interesting)data '''
         self.range_set_done = True
-        start = 70 #raw_input(' Begin at time ')
-        stopp = 600 #raw_input(' End at time ')
+        start = 80 #raw_input(' Begin at time ')
+        stopp = 460 #raw_input(' End at time ')
         try:
             stab = np.argmin(abs(self.t - float(start)))
             stob = np.argmin(abs(self.t - float(stopp)))
@@ -275,14 +288,18 @@ class generate():
 
 
     def plot_magnetic(self):
-        additional = 'test_inpaintfull' #raw_input(' plotting magn. additional name: ')
+        additional = 'raw data' #raw_input(' plotting magn. additional name: ')
         Bs = [self.Bx, self.By, self.Bz, self.B] #, self.Bmodel]
         Bnames = ['Bx', 'By', 'Bz', 'B']#, 'Bmodel']
         for n in range(len(Bnames)):
             plt.plot(self.t, Bs[n])#, 'b-') #, '*')
-            plt.title('Plot %s %s' % (additional,Bnames[n]))
-            plt.savefig('graphs/plot%s%s.png' % (additional,Bnames[n]))
-            #plt.show()
+            plt.title('ici-4 raw data for reference of magnetic field By.', fontsize=30)#'Plot ')#%s %s' % (additional,Bnames[n]))
+            #'ici-4 raw data of magnetic field By.'
+            plt.text(0.95, 0.05, 'Preliminary results', fontsize=40, color='red', ha='right', va='bottom', alpha=0.3)
+            plt.ylabel('Signal, nT ', fontsize=20)
+            plt.xlabel('time [s]') #Ticks (approx. after launch)', fontsize=20)
+            plt.savefig('graphs/plot_raw_data_%s_zoom' % Bnames[n])#%s%s.png' % (additional,Bnames[n]))
+            plt.show()
             plt.clf()
 
         print len(self.t_pos), len(self.Bmodel)

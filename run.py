@@ -16,7 +16,7 @@ from fetching import fetch
 
 t_start = time.time()
 
-fetishing = False
+fetishing = False#True
 if fetishing == True:
     F = fetch()
     F.B()
@@ -26,6 +26,8 @@ if fetishing == True:
 run = generate()
 #run.remove_png()
 run.load()
+run.plot_magnetic()
+sys.exit()
 
 run.get_Bmodel()
 
