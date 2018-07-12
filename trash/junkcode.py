@@ -1,12 +1,204 @@
 # Junk code
 
 
+
+# param_bc
+        #minimize_2nd_order = lambda A: np.sum(np.sqrt( A[0]*self.Bx + A[1]*self.By + A[2]*self.Bz + A[3]) - self.Bmodel_long)
+        # param_abs
+        #minimize_3rd_order = lambda x: np.sum(np.sqrt(x[0]*self.Bx**2 + x[1]*self.Bx
+        #    + x[2]*self.By**2 + x[3]*self.By + x[4]*self.Bz**2 + x[5]*self.Bz + x[6]) - self.Bmodel_long)
+
+        #minimize_abc_nosum = lambda x: np.sqrt(x[0]*self.Bx**2 + x[1]*self.Bx
+        #    + x[2]*self.By**2 + x[3]*self.By + x[4]*self.Bz**2 + x[5]*self.Bz + x[6]) - self.Bmodel_long
+
+        #plt.plot(self.t, self.Bmodel_long)
+        #for i in np.linspace(10, 50, 15):
+        #   #print minimize_c(i)
+        #    plt.plot(self.t, minimize_abc_nosum([-7.97645071e+02, 3.0, -7.94306010e+01, 4.0, -6.45352895e+02, 4.0*i**2, 3.0e5])) #, legend='%s'%i)
+        #plt.legend()
+
+        #plt.show()
+        #lt.clf
+        #sys.exit()
+        # '''
+        #last_result = np.load(var.fit_datadump)
+        
+        # Last result: np.array([ -7.97645071e+02, 3.0, -7.94306010e+01, 4.0, -6.45352895e+02, 4.0, 3.0e5])
+        #initial_guess = last_result['x'] #var.fit_param_abc
+        #initial_guess = np.array([ -7.97645071e+02, 3.0, -7.94306010e+01, 4.0, -6.45352895e+02, 4.0, 3.0e5])
+        
+        
+        
+
+
+        #(self.By, fs=1.0, window='hann', nperseg=256, noverlap=None, nfft=None, detrend=False, return_onesided=True, boundary='zeros', padded=True, axis=-1))
+
+        #for m in [self.Bx, self.By, self.Bz, self.B]:
+            #fft = (np.fft.rfft2(m))
+            #plt.pcolormesh(fft)
+            #plt.show()
+            #plt.clf
+        #plt.pcolormesh()
+
+
+
+
+    def fill_data(self):
+        #to find avg total in three 1D params
+        delta_avg = np.array([np.sum(abs(self.Bx - np.roll(self.Bx, 1)))/len(self.Bx),
+            np.sum(abs(self.By - np.roll(self.By, 1)))/len(self.By),
+            np.sum(abs(self.Bz - np.roll(self.Bz, 1)))/len(self.Bz) ])
+        #delta_avg /= len(self.Bx)
+        print delta_avg
+        for m in [self.Bx, self.By, self.Bz]:
+            for j in range(var.fit_order):
+                deltas += var.fit_param[j]*(np.sum(abs(m - np.roll(m, j))) + np.sum(abs(m - np.roll(m, -j))))/(2*np.len(m))
+                
+                #if deltas >= deltas_tolerance:
+                    
+        avg_delta = np.sum([3,4])/len(self.Bx)
+        return None
+
+
+
+
+        #cA, cD = pywt.dwt(self.Bx, 'db2')
+        #x2 = pywt.idwt(cA, cD, 'db2')
+        #CA, CD = np.meshgrid(cA, cD)
+        #plt.pcolor(CA, CD, np.linspace(0,100,101))
+        #plt.show()
+        
+        '''
+        import pylab 
+        import scipy.io.wavfile as wavfile
+        x = self.Bx
+        # Find the highest power of two less than or equal to the input.
+        def lepow2(x):
+            return 2 ** floor(log2(x))
+
+        # Make a scalogram given an MRA tree.
+        def scalogram(data):
+            bottom = 0
+
+            vmin = min(map(lambda x: min(abs(x)), data))
+            vmax = max(map(lambda x: max(abs(x)), data))
+
+            gca().set_autoscale_on(False)
+
+            for row in range(0, len(data)):
+                scale = 2.0 ** (row - len(data))
+
+                imshow(
+                    array([abs(data[row])]),
+                    interpolation = 'nearest',
+                    vmin = vmin,
+                    vmax = vmax,
+                    extent = [0, 1, bottom, bottom + scale])
+
+                bottom += scale
+
+        # Load the signal, take the first channel, limit length to a power of 2 for simplicity.
+        rate, signal = wavfile.read('kitten.wav')
+        signal = signal[0:lepow2(len(signal)),0]
+        tree = pywt.wavedec(signal, 'db5')
+
+        # Plotting.
+        pylab.gray()
+        pylab.scalogram(tree)
+        pylab.show() '''
+
+        '''
+        from scipy import fftpack, ndimage
+        import matplotlib.pyplot as plt
+
+        image = ndimage.imread('image2.jpg', flatten=True)     # flatten=True gives a greyscale image
+        fft2 = fftpack.fft2(image)
+
+        plt.imshow(fft2)
+        plt.show() '''
+        
+        
+        
+        
+    def load_params(self):
+        ''' To be removed? Not useful anymore '''
+        # ca. t = 70 - 550 s
+        self.start = np.argmin(abs(self.t-70.))
+        self.stop = np.argmin(abs(self.t-550.))
+        self.length = len(self.t)
+        print self.length
+        return None 
+        
+
+        A = np.zeros((9))
+        A0 = var.fit_param_abc
+        A_c = np.zeros((3))
+        A_c0 = var.fit_param_c
+        
+
+
+ #np.array([2,3,4,5,6,7,2,4,1000])
+        #Bx_dir = A[0]*self.Bx**2 + A[1]*self.Bx + A[2]
+        #Bx_dir = A[3]*self.By**2 + A[4]*self.By + A[5]
+        #Bx_dir = A[6]*self.Bz**2 + A[7]*self.Bz + A[8]
+        #fun = lambda ABC: ABC[0]*x**2  ABC[1]*x + ABC[2] - B_model_long
+        
+        #haha nope. wanna see something nasty? Keep readin the next few lines of code!
+        '''parameters = []
+        j = 0
+        for a0 in [5., 10, 100]:
+            for a1 in [5., 100]:
+                for a2 in [1000, 20000]:
+                    for a3 in [5., 10, 100]:
+                        for a4 in [5., 100]:
+                            for a5 in [1000, 20000]:
+                                for a6 in [5., 10, 100]:
+                                    for a7 in [5., 100]:
+                                        for a8 in [1000, 20000]: 
+                                            result = 0 
+                                            for i in range(len(self.Bx)):
+                                                result += np.sqrt(a0*self.Bx[i]**2 + a1*self.Bx[i] + a2 + a3*self.By[i]**2 + a4*self.By[i] + a5 + a6*self.Bz[i]**2 + a7*self.Bz[i] + a8) - Bmodel_long[i]
+                                            parameters.append([float(result), a0, a1, a2, a3, a4, a5, a6, a7, a8])
+                            print j
+                            j +=1 
+        print parameters
+        np.save('parameters, bruteforce', parameters)
+        '''
+
+
+#res_bc = 
+        #res_abc = 
+        
+
+        '''
+        #3rd order
+        #A, B, C =
+        x = self.B 
+        print float(len(x)) / len(self.Bmodel), float(len(x)) / len(self.Bmodel) - 28*len(self.Bmodel), len(self.alt)
+        B_model_long = np.repeat(self.Bmodel,28, axis=0)
+        print self.Bmodel[:100]
+        print 'ok'
+        #B_model_long = np.
+        
+        fun = lambda ABC: ABC[0]*x**2  ABC[1]*x + ABC[2] - B_model_long
+        #A*x**2 + B*x + C = B_model
+        F = scipy.optimize.minimize(fun, [1e3, 1e3, 3.5e9], args=(), method='CG', )
+        print F
+        exit()'''
+
+
+
+
+
+
+
+
 ###COPY
 
 
 
 
-
+            #if self.Bx[i] == float('nan') or self.By[i] == float('nan') or self.Bz[i] == float('nan'):
 
 
 

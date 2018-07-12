@@ -10,7 +10,7 @@ import numpy as np
 backupdata = False
 
 #Plot sammenlikning av for/etter div. median etc.
-plot_comparison = True
+plot_comparison = False
 
 # Original .asc file containing data. 
 filename_old = '../data/ICI4_magn_hires.asc'
@@ -55,10 +55,25 @@ launch_TAI = launch_ticktock.TAI
 # For fitting of data-params:
 #deltafit = 3 #delta allowed for finished fit
 #fit_order = 5 #order of fittings. 5 = 0th to 4th order.
-fit_param = [1., 0.6, 30000, 0.1, 4., 40000., 5., 20, 4000 ]
-fit_niter = 1000
+fit_param_c = [300000, 40000, 4000]
+fit_param_b = [3, 4, 4]
+fit_param_a = [3, 4, 4]
+'''fit_param_bc = [fit_param_b[0], fit_param_c[0], 
+    fit_param_b[1], fit_param_c[1],
+    fit_param_b[2], fit_param_c[2]]'''
+fit_param_bc = [fit_param_b[0], fit_param_b[1],
+    fit_param_b[2], fit_param_c[0]]
+
+'''fit_param_abc = [fit_param_a[0], fit_param_b[0], fit_param_c[0], 
+    fit_param_a[1], fit_param_b[1], fit_param_c[1],
+    fit_param_a[2], fit_param_b[2], fit_param_c[2]]'''
+fit_param_abc = [fit_param_a[0], fit_param_b[0], 
+    fit_param_a[1], fit_param_b[1],
+    fit_param_a[2], fit_param_b[2], fit_param_c[0]]
+fit_niter = 30
 fit_T = 50 
 fit_stepsize = 10000
+fit_datadump = '../dump_data/Bmodel_fit'
 
 
 # Median filter:
@@ -79,6 +94,4 @@ desp_z_down = -2e7 #7e7
 plot_comp_xlim = [1389000, 1396000] #[486.50, 488.25] #[680.50, 682.50]
 plot_comp_ylim = [7.4e8, 8.0e8]
 
-
-#function to minimize:
 
