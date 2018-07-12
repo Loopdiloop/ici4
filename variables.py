@@ -70,9 +70,9 @@ fit_param_bc = [fit_param_b[0], fit_param_b[1],
 fit_param_abc = [fit_param_a[0], fit_param_b[0], 
     fit_param_a[1], fit_param_b[1],
     fit_param_a[2], fit_param_b[2], fit_param_c[0]]
-fit_niter = 30
+fit_niter = 90
 fit_T = 50 
-fit_stepsize = 10000
+fit_stepsize = 1000
 fit_datadump = '../dump_data/Bmodel_fit'
 
 

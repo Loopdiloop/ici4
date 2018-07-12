@@ -202,17 +202,17 @@ class generate():
     def fit_Bmodel(self):
         # 3rd order : ax**2 + bx + c
         # param_c
-        Bx = self.Bx : By = self.By : Bz = self.Bz
+        Bx = self.Bx ; By = self.By ; Bz = self.Bz
         Bmodel_long = self.Bmodel_long
-        minimize_1st_order = lambda x: np.sqrt((x[0]*Bx + x[1])**2 + (x[0]*By + x[1])**2 
-            + (x[0]*Bz + x[1])**2) - Bmodel_long
+        minimize_1st_order = lambda x: np.sum(np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
+            + (x[4]*Bz + x[5])**2) - Bmodel_long)
         
-        minimize_2nd_order = lambda x: np.sqrt((x[0]*Bx**2 + x[1]*Bx + x[2])**2 + 
-            (x[3]*By**2 + x[4]*By + x[5])**2 + (x[6]*Bz**2 + x[7]*Bz + x[8])**2) - Bmodel_long
+        minimize_2nd_order = lambda x: np.sum(np.sqrt((x[0]*Bx**2 + x[1]*Bx + x[2])**2 + 
+            (x[3]*By**2 + x[4]*By + x[5])**2 + (x[6]*Bz**2 + x[7]*Bz + x[8])**2) - Bmodel_long)
 
-        minimize_3rd_order = lambda x: np.sqrt((x[0]*Bx**3 + x[1]*Bx**2 + x[2]*Bx + x[3])**2 + 
+        minimize_3rd_order = lambda x: np.sum(np.sqrt((x[0]*Bx**3 + x[1]*Bx**2 + x[2]*Bx + x[3])**2 + 
             (x[4]*By**3 + x[5]*By**2 + x[6]*By + x[7])**2 + 
-            (x[8]*Bz**3 + x[9]*Bz**2 + x[10]*Bz + x[11])**2) - Bmodel_long
+            (x[8]*Bz**3 + x[9]*Bz**2 + x[10]*Bz + x[11])**2) - Bmodel_long)
 
         initial_guess_1st_order = np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
             mini.ZC1, mini.ZD1 ]).astype(float)
@@ -225,17 +225,27 @@ class generate():
             mini.ZD1 ]).astype(float)
         
         print ' Running fitting of Bmodel'
-        result = scipy.optimize.basinhopping(minimize_abc, initial_guess, var.fit_niter, var.fit_T , var.fit_stepsize)
+        result = scipy.optimize.basinhopping(minimize_1st_order, initial_guess_1st_order, 
+            var.fit_niter, var.fit_T , var.fit_stepsize)
+
+        '''Outout result: 
+        The optimization result represented as a OptimizeResult object. 
+        Important attributes are: x the solution array, fun the value of 
+        the function at the solution, and message which describes the cause 
+        of the termination. The OptimzeResult object returned by the selected 
+        minimizer at the lowest minimum is also contained within this 
+        object and can be accessed through the lowest_optimization_result attribute.'''   
+        
         print result
         np.save(var.fit_datadump, result)
-
-        plt.plot(self.t, self.Bmodel_long, 'b')
+        sys.exit()
+        '''plt.plot(self.t, self.Bmodel_long, 'b')
         plt.plot(self.t, minimize_abc_nosum(initial_guess), 'r')
         plt.plot(self.t, minimize_abc_nosum(result['x']), 'c')
         plt.title('results of minimalizing?')
         plt.show()
         plt.clf()
-
+        '''
 
         
 
