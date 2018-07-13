@@ -1,0 +1,218 @@
+
+Noen kjoringer av model_run.py for minimiseringen.
+
+
+ ************ Very short range *********************
+[mbjerk@r-lnx703 ici4]$ python model_run.py 
+ Setting range for (interesting)data 
+ no t_abs, but it ok, little you
+ New length of arrays:  57131
+ Running fitting of Bmodel
+                        fun: -2718414070.7668924
+ lowest_optimization_result:       fun: -2718414070.7668924
+ hess_inv: array([[  3.02729055e-21,  -1.15209988e-11,   4.67382975e-20,
+         -3.72998156e-11,  -9.04993786e-22,   1.82164252e-12],
+       [ -1.15209988e-11,   5.34457567e-02,  -2.80425390e-10,
+          2.15009993e-01,   5.38249617e-12,  -1.26588862e-02],
+       [  4.67382975e-20,  -2.80425390e-10,   3.00030879e-18,
+         -2.29887283e-09,  -2.59178969e-20,   5.00358931e-11],
+       [ -3.72998156e-11,   2.15009993e-01,  -2.29887283e-09,
+          1.76822381e+00,   1.78242827e-11,  -3.26303332e-02],
+       [ -9.04993786e-22,   5.38249617e-12,  -2.59178969e-20,
+          1.78242827e-11,   2.27629212e-21,  -4.52281118e-12],
+       [  1.82164252e-12,  -1.26588862e-02,   5.00358931e-11,
+         -3.26303332e-02,  -4.52281118e-12,   1.12332798e-02]])
+      jac: array([  3.65585743e+13,  -7.36000000e+03,   6.53422156e+12,
+         1.95200000e+03,   1.08817868e+14,   1.90400000e+04])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 1484
+      nit: 52
+     njev: 184
+   status: 2
+  success: False
+        x: array([ -8.45065338e-09,   1.45198758e+01,  -2.89110016e-07,
+         2.04939142e+02,   1.47691493e-08,  -8.99392144e+00])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 41
+                       nfev: 55861
+                        nit: 40
+                       njev: 6924
+                          x: array([ -8.45065338e-09,   1.45198758e+01,  -2.89110016e-07,
+         2.04939142e+02,   1.47691493e-08,  -8.99392144e+00])
+65.2 seconds
+
+
+
+
+
+ ************ Very short range *********************
+[mbjerk@r-lnx703 ici4]$ python model_run.py 
+ New length of arrays:  57131
+ Running fitting of Bmodel
+                        fun: -2719897904.2346888
+ lowest_optimization_result:       fun: -2719897904.2346888
+ hess_inv: array([[1, 0, 0, 0, 0, 0],
+       [0, 1, 0, 0, 0, 0],
+       [0, 0, 1, 0, 0, 0],
+       [0, 0, 0, 1, 0, 0],
+       [0, 0, 0, 0, 1, 0],
+       [0, 0, 0, 0, 0, 1]])
+      jac: array([  1.16378309e+14,   1.85600000e+04,   1.62287075e+13,
+         1.60000000e+03,   1.04646263e+14,   2.12480000e+04])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 572
+      nit: 0
+     njev: 70
+   status: 2
+  success: False
+        x: array([ -3.01086361e-09,   1.15844455e+01,  -1.36577863e-07,
+         9.68417594e+01,  -2.72469962e-09,   1.07019155e+01])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 20001
+                       nfev: 15005423
+                        nit: 20000
+                       njev: 1846181
+                          x: array([ -3.01086361e-09,   1.15844455e+01,  -1.36577863e-07,
+         9.68417594e+01,  -2.72469962e-09,   1.07019155e+01])
+17699.1 seconds
+
+
+
+
+
+
+ ************ Very short range *********************
+[mbjerk@r-lnx703 ici4]$ python model_run.py 
+ Setting range for (interesting)data 
+no t_abs, but it ok, little you
+ New length of arrays:  57131
+ Running fitting of Bmodel
+                        fun: 5.923211574554443e-07
+ lowest_optimization_result:       fun: 5.923211574554443e-07
+ hess_inv: array([[  1.20612177e-20,  -9.75864371e-11,   3.35349940e-20,
+         -1.40051824e-14,  -2.10400361e-20,   8.49244264e-11],
+       [ -9.75864371e-11,   7.92014519e-01,  -2.71675318e-10,
+          8.71066594e-05,   1.71082541e-10,  -6.89679626e-01],
+       [  3.35349940e-20,  -2.71675318e-10,   3.56618049e-18,
+         -1.40288091e-09,   1.24152529e-21,  -3.71989239e-10],
+       [ -1.40051824e-14,   8.71066594e-05,  -1.40288091e-09,
+          9.95413817e-01,   1.73668998e-12,  -5.17662077e-03],
+       [ -2.10400361e-20,   1.71082541e-10,   1.24152529e-21,
+          1.73668998e-12,   3.57237054e-19,  -5.78920474e-10],
+       [  8.49244264e-11,  -6.89679626e-01,  -3.71989239e-10,
+         -5.17662077e-03,  -5.78920474e-10,   1.63236850e+00]])
+      jac: array([  9.52485169e+13,   6.58650000e+03,   7.68456856e+12,
+         1.08703750e+04,   1.43786948e+13,   2.41456250e+04])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 1452
+      nit: 36
+     njev: 180
+   status: 2
+  success: False
+        x: array([  2.05422143e-05,  -4.15690381e+04,   1.03866410e-05,
+        -1.54944104e+04,   1.08294995e-05,  -4.59599374e+04])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 201
+                       nfev: 251917
+                        nit: 200
+                       njev: 31193
+                          x: array([  2.05422143e-05,  -4.15690381e+04,   1.03866410e-05,
+        -1.54944104e+04,   1.08294995e-05,  -4.59599374e+04])
+293.8 seconds
+
+
+
+*************  Relevant range  ****************************
+
+[mbjerk@r-lnx703 ici4]$ python model_run.py 
+ Setting range for (interesting)data 
+no t_abs, but it ok, little you
+ New length of arrays:  1085496
+ Running fitting of Bmodel
+                        fun: 7.092207670211792e-05
+ lowest_optimization_result:       fun: 7.092207670211792e-05
+ hess_inv: array([[  9.54618959e-20,  -2.33370908e-10,   2.88957547e-20,
+         -3.34412622e-12,  -4.21654326e-22,  -2.32457501e-11],
+       [ -2.33370908e-10,   6.17225112e-01,  -1.40406652e-10,
+          7.31514817e-02,   6.41667597e-12,  -2.83174628e-03],
+       [  2.88957547e-20,  -1.40406652e-10,   1.96937632e-19,
+         -1.77787808e-10,  -1.95704117e-20,   1.61806034e-10],
+       [ -3.34412622e-12,   7.31514817e-02,  -1.77787808e-10,
+          1.68014270e-01,   1.67439595e-11,  -1.59694635e-01],
+       [ -4.21654326e-22,   6.41667597e-12,  -1.95704117e-20,
+          1.67439595e-11,   3.58118024e-21,  -1.60143623e-11],
+       [ -2.32457501e-11,  -2.83174628e-03,   1.61806034e-10,
+         -1.59694635e-01,  -1.60143623e-11,   1.59386447e-01]])
+      jac: array([  7.55139289e+14,   3.33916500e+05,   3.67811053e+14,
+         5.55442000e+05,   1.61926498e+15,   3.04462000e+05])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 1603
+      nit: 36
+     njev: 199
+   status: 2
+  success: False
+        x: array([ -3.79811459e-08,  -1.13937973e+04,  -6.98996680e-04,
+         5.17740110e+05,   1.19704485e-05,  -8.79716848e+03])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 21
+                       nfev: 28568
+                        nit: 20
+                       njev: 3540
+                          x: array([ -3.79811459e-08,  -1.13937973e+04,  -6.98996680e-04,
+         5.17740110e+05,   1.19704485e-05,  -8.79716848e+03])
+856.1 seconds
+
+fit_niter = 20
+fit_T = 50 
+fit_stepsize = 1000
+
+#OMG 
+20 iterations took 850 seconds.. -> 42 sek pr iteration.
+
+
+
+[mbjerk@r-lnx703 ici4]$ python model_run.py 
+ Setting range for (interesting)data 
+no t_abs, but it ok, little you
+ New length of arrays:  1085496
+ Running fitting of Bmodel, 40 iterations
+                        fun: 8.46758484840393e-06
+ lowest_optimization_result:       fun: 8.46758484840393e-06
+ hess_inv: array([[  3.24074729e-20,  -5.54375404e-12,  -1.78417336e-20,
+          4.23358048e-11,  -2.61027222e-20,   1.16831375e-10],
+       [ -5.54375404e-12,   3.93822281e-03,   4.25591968e-12,
+         -6.01155589e-03,   1.49970562e-12,  -1.90915276e-02],
+       [ -1.78417336e-20,   4.25591968e-12,   2.24232051e-18,
+         -1.34117848e-09,   7.77203033e-21,   5.98682374e-11],
+       [  4.23358048e-11,  -6.01155589e-03,  -1.34117848e-09,
+          9.86183018e-01,  -3.15043952e-11,   7.90661066e-02],
+       [ -2.61027222e-20,   1.49970562e-12,   7.77203033e-21,
+         -3.15043952e-11,   2.40096633e-20,  -9.50515231e-11],
+       [  1.16831375e-10,  -1.90915276e-02,   5.98682374e-11,
+          7.90661066e-02,  -9.50515231e-11,   4.78551278e-01]])
+      jac: array([  7.42365552e+14,   1.20978000e+05,   8.45602952e+13,
+         1.65108500e+05,   1.03739770e+15,   6.08305000e+04])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 1468
+      nit: 34
+     njev: 182
+   status: 2
+  success: False
+        x: array([  5.40800596e-06,  -7.46808905e+03,   9.74210627e-04,
+        -6.92984651e+05,   1.29220637e-05,  -3.18654229e+04])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 41
+                       nfev: 51953
+                        nit: 40
+                       njev: 6438
+                          x: array([  5.40800596e-06,  -7.46808905e+03,   9.74210627e-04,
+        -6.92984651e+05,   1.29220637e-05,  -3.18654229e+04])
+1542.8 seconds
+
+
+# 40 iterations
+
+
+
+
+

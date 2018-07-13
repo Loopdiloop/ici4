@@ -22,6 +22,7 @@ import spacepy.datamodel as spacedatamodel
 import scipy
 from scipy import signal
 import scipy.signal as sign
+import scipy.io as IO
 
 
 
@@ -201,21 +202,35 @@ class generate():
 
     def fit_Bmodel(self):
         # 3rd order : ax**2 + bx + c
-        # param_c
+
+        test_waytoogood = np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
+            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])
+
         Bx = self.Bx ; By = self.By ; Bz = self.Bz
         Bmodel_long = self.Bmodel_long
-        minimize_1st_order = lambda x: np.sum(np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
-            + (x[4]*Bz + x[5])**2) - Bmodel_long)
+        minimize_1st_order = lambda x: abs(np.sum(np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
+            + (x[4]*Bz + x[5])**2) - Bmodel_long))
         
-        minimize_2nd_order = lambda x: np.sum(np.sqrt((x[0]*Bx**2 + x[1]*Bx + x[2])**2 + 
-            (x[3]*By**2 + x[4]*By + x[5])**2 + (x[6]*Bz**2 + x[7]*Bz + x[8])**2) - Bmodel_long)
+        minimize_2nd_order = lambda x: abs(np.sum(np.sqrt((x[0]*Bx**2 + x[1]*Bx + x[2])**2 + 
+            (x[3]*By**2 + x[4]*By + x[5])**2 + (x[6]*Bz**2 + x[7]*Bz + x[8])**2) - Bmodel_long))
 
-        minimize_3rd_order = lambda x: np.sum(np.sqrt((x[0]*Bx**3 + x[1]*Bx**2 + x[2]*Bx + x[3])**2 + 
+        minimize_3rd_order = lambda x: abs(np.sum(np.sqrt((x[0]*Bx**3 + x[1]*Bx**2 + x[2]*Bx + x[3])**2 + 
             (x[4]*By**3 + x[5]*By**2 + x[6]*By + x[7])**2 + 
-            (x[8]*Bz**3 + x[9]*Bz**2 + x[10]*Bz + x[11])**2) - Bmodel_long)
+            (x[8]*Bz**3 + x[9]*Bz**2 + x[10]*Bz + x[11])**2) - Bmodel_long))
 
-        initial_guess_1st_order = np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
+        initial_guess_1st_order = np.array([mini.XC1, 0., mini.YC1, 0., 
+            mini.ZC1, 0. ]).astype(float)
+
+        initial_guess_1st_order_David = np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
             mini.ZC1, mini.ZD1 ]).astype(float)
+            
+        '''np.array([  5.40800596e-06,  -7.46808905e+03,   9.74210627e-04,
+        -6.92984651e+05,   1.29220637e-05,  -3.18654229e+04]) '''
+        
+        '''np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
+            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])'''
+        '''np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
+            mini.ZC1, mini.ZD1 ]).astype(float)'''
 
         initial_guess_2nd_order = np.array([mini.XB1, mini.XC1, mini.XD1, mini.YB1, 
             mini.YC1, mini.YD1, mini.ZB1, mini.ZC1, mini.ZD1 ]).astype(float)
@@ -223,10 +238,32 @@ class generate():
         initial_guess_3rd_order = np.array([mini.XA1, mini.XB1, mini.XC1, mini.XD1, 
             mini.YA1, mini.YB1, mini.YC1, mini.YD1, mini.ZA1, mini.ZB1, mini.ZC1, 
             mini.ZD1 ]).astype(float)
+
+
+
+        minimize_1st_order_full = lambda x: np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
+            + (x[4]*Bz + x[5])**2)# - Bmodel_long
         
-        print ' Running fitting of Bmodel'
-        result = scipy.optimize.basinhopping(minimize_1st_order, initial_guess_1st_order, 
-            var.fit_niter, var.fit_T , var.fit_stepsize)
+
+        self.XX = minimize_1st_order_full(initial_guess_1st_order_David)
+        fs = 5000./ (self.t[5000] - self.t[0])
+        N = len(self.B)
+        B_dict = dict({'B': self.B, 'firstorder':self.XX, 'fs': fs, 'N': N})
+        IO.savemat('B.mat', B_dict)
+        IO.savemat('B.mat', B_dict)
+        print ' saved, ok'
+        '''
+        ress = minimize_1st_order_full(test_waytoogood)
+        plt.plot(self.t, self.B) 
+        plt.plot(np.linspace(self.t[0], self.t[-1], len(ress)), ress)  
+        plt.plot(self.t, self.Bmodel_long)  
+        plt.show()
+        plt.clf()'''
+        #sys.exit()
+        
+        print ' Running fitting of Bmodel, %s iterations' % var.fit_niter
+        #result = scipy.optimize.basinhopping(minimize_1st_order, initial_guess_1st_order, 
+        #    var.fit_niter, var.fit_T , var.fit_stepsize)
 
         '''Outout result: 
         The optimization result represented as a OptimizeResult object. 
@@ -236,18 +273,8 @@ class generate():
         minimizer at the lowest minimum is also contained within this 
         object and can be accessed through the lowest_optimization_result attribute.'''   
         
-        print result
-        np.save(var.fit_datadump, result)
-        sys.exit()
-        '''plt.plot(self.t, self.Bmodel_long, 'b')
-        plt.plot(self.t, minimize_abc_nosum(initial_guess), 'r')
-        plt.plot(self.t, minimize_abc_nosum(result['x']), 'c')
-        plt.title('results of minimalizing?')
-        plt.show()
-        plt.clf()
-        '''
-
-        
+        #print result
+        #np.save(var.fit_datadump, result)
 
         return None
 
@@ -255,7 +282,7 @@ class generate():
     def set_range(self):
         print ''' Setting range for (interesting)data '''
         self.range_set_done = True
-        start = 440#80 #raw_input(' Begin at time ')
+        start = 400 #raw_input(' Begin at time ')
         stopp = 460 #raw_input(' End at time ')
         try:
             stab = np.argmin(abs(self.t - float(start)))
@@ -369,36 +396,75 @@ class generate():
 
 
     def fft(self):
+        '''
         for m in [self.Bx, self.By, self.Bz, self.B]:
-            fft = (np.fft.rfft(m))
+            fft = abs(np.fft.rfft(m))
             plt.plot(np.linspace(0,1,len(fft)), fft)
             plt.show()
             plt.clf
+        '''
+        X = self.B
+        fmax = 200
+        fmin = 0
+        fs = 5000./(self.t[5000] - self.t[0]) #freq
+        width = 2000  /2
+        jump = 1500
+        map = [] #np.zeros((bins, fft_len))
+        step = width
+        #stop = start + width
+        while step+(width) < len(X):
+            map.append(np.real(np.fft.rfft(X[step-width:step+width])))
+            
+            step += jump
+        map = np.array(map).astype(float)
+        #print map
+        plt.pcolormesh(map, vmin=-1., vmax=1., cmap='ocean')
+        plt.show()
+
+
+
+
         return None
 
     def fft_time(self):
         fs = 5000./ (self.t[5000] - self.t[0])
         print fs
         nper = 300
+        B_dict = dict({'B': self.B})
+        IO.savemat('B.mat', B_dict)
+        IO.savemat('B.mat', B_dict)
+        '''
+        for fs in [20, 30, 50, 70, 100, 120, 150, 300, 500, 701, 2000, 3000, 4000]:
+            #f,t,Zxx = signal.stft(self.B, fs, nperseg=nper)
+            f, t, Zxx = signal.spectrogram(self.By, fs)
+            
+            plt.pcolormesh(t, f, np.abs(Zxx))#, vmin=0, vmax=4000)
+            plt.title('STFT Magnitude, %s ' % nper)
+            plt.ylabel('Frequency [Hz]')
+            plt.xlabel('Time [sec]')
+            plt.savefig('graphs/bbbb%s.png' % nper)
+            plt.clf()'''
         
-        f,t,Zxx = signal.stft(self.By, fs, nperseg=nper)
-        f, t, Zxx = signal.spectrogram(self.By, fs)
+        print 'ok, everything ran'
         
-        plt.pcolormesh(t, f, np.abs(Zxx))#, vmin=0, vmax=4000)
-        plt.title('STFT Magnitude')
-        plt.ylabel('Frequency [Hz]')
-        plt.xlabel('Time [sec]')
-        plt.show()
+        '''
+        y = self.By
+        powerSpectrum, freqenciesFound, time, imageAxis = plt.specgram(y, Fs=fs, cmap='rainbow')
+        #Pxx, freqs, bins, im = plt.specgram(signal, Fs=fs)
+        plt.ylim((0,70))
+        plt.xlabel('Time')
+        plt.ylabel('Frequency')
+        plt.show() '''
 
 
-
+        '''
         freqs, times, Sx = signal.spectrogram(audio, fs=rate, window='hanning', 
             nperseg=1024, noverlap=M - 100, detrend=False, scaling='spectrum')
 
         f, ax = plt.subplots(figsize=(4.8, 2.4))
         ax.pcolormesh(times, freqs / 1000, 10 * np.log10(Sx), cmap='viridis')
         ax.set_ylabel('Frequency [kHz]')
-        ax.set_xlabel('Time [s]');
+        ax.set_xlabel('Time [s]');'''
 
         return None
         
@@ -412,16 +478,106 @@ class generate():
             vmax=abs(cwtmatr).max(), vmin=-abs(cwtmatr).max())
         plt.show()'''
         
-        widths = np.arange(1, 21)
+        '''widths = np.arange(1, 21)
         cwtmatr = signal.cwt(self.B, signal.ricker, widths)
         plt.imshow(cwtmatr, extent=[self.t[0], self.t[-1], 1, 21], cmap='PRGn', aspect='auto',
             vmax=abs(cwtmatr).max(), vmin=-abs(cwtmatr).max())
-        plt.show()
+        plt.show()'''
+
+        #wav = pywt.Wavelet('mor1')
+        #phi, psi, x = wav.wavefun(level=5)
         
+        '''
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        import pywt
+
+        # use 'list' to get a list of all available 1d demo signals
+        signals = pywt.data.demo_signal('list')
+
+        subplots_per_fig = 5
+        signal_length = len(self.B)
+        i_fig = 0
+        n_figures = int(np.ceil(len(signals)/subplots_per_fig))
+        for i_fig in range(n_figures):
+            # Select a subset of functions for the current plot
+            func_subset = signals[
+                i_fig * subplots_per_fig:(i_fig + 1) * subplots_per_fig]
+
+            # create a figure to hold this subset of the functions
+            fig, axes = plt.subplots(subplots_per_fig, 1)
+            axes = axes.ravel()
+            for n, signal in enumerate(func_subset):
+                if signal in ['Gabor', 'sineoneoverx']:
+                    # user cannot specify a length for these two
+                    x = pywt.data.demo_signal(signal)
+                else:
+                    x = pywt.data.demo_signal(signal, signal_length)
+                ax = axes[n]
+                ax.plot(x.real)
+                if signal == 'Gabor':
+                    # The Gabor signal is complex-valued
+                    ax.plot(x.imag)
+                    ax.legend(['Gabor (Re)', 'Gabor (Im)'], loc='upper left')
+                else:
+                    ax.legend([signal, ], loc='upper left')
+            # omit axes for any unused subplots
+            for n in range(n + 1, len(axes)):
+                axes[n].set_axis_off()
+        plt.show()
+
+
+
+
+
+        #import the libraries
+        import matplotlib.pyplot as plot
+        import numpy as np
+
+        # Define the list of frequencies
+        frequencies         = np.arange(5,105,5)
+
+        # Sampling Frequency
+        samplingFrequency   = 400
+
+        # Create two ndarrays
+        s1 = np.empty([0]) # For samples
+        s2 = np.empty([0]) # For signal
+        # Start Value of the sample
+        start   = 1
+        # Stop Value of the sample
+        stop    = samplingFrequency+1
+
+        for frequency in frequencies:
+            sub1 = np.arange(start, stop, 1)
+            # Signal - Sine wave with varying frequency + Noise
+            sub2 = np.sin(2*np.pi*sub1*frequency*1/samplingFrequency)+np.random.randn(len(sub1))
+            s1      = np.append(s1, sub1)
+            s2      = np.append(s2, sub2)
+
+            start   = stop+1
+            stop    = start+samplingFrequency
+
+        # Plot the signal
+        plot.subplot(211)
+        plot.plot(s1,s2)
+        plot.xlabel('Sample')
+        plot.ylabel('Amplitude')
+
+        # Plot the spectrogram
+        plot.subplot(212)
+        powerSpectrum, freqenciesFound, time, imageAxis = plot.specgram(s2, Fs=samplingFrequency)
+        plot.xlabel('Time')
+        plot.ylabel('Frequency')
+        plot.show()   '''
 
         return None
 
 
-
+    def save_matlab(self):
+        return None
+        
 
 

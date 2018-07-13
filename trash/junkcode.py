@@ -1,6 +1,24 @@
 # Junk code
 
+#deltafit = 3 #delta allowed for finished fit
+#fit_order = 5 #order of fittings. 5 = 0th to 4th order.
+fit_param_c = [300000, 40000, 4000]
+fit_param_b = [3, 4, 4]
+fit_param_a = [3, 4, 4]
+'''fit_param_bc = [fit_param_b[0], fit_param_c[0], 
+    fit_param_b[1], fit_param_c[1],
+    fit_param_b[2], fit_param_c[2]]'''
+fit_param_bc = [fit_param_b[0], fit_param_b[1],
+    fit_param_b[2], fit_param_c[0]]
 
+'''fit_param_abc = [fit_param_a[0], fit_param_b[0], fit_param_c[0], 
+    fit_param_a[1], fit_param_b[1], fit_param_c[1],
+    fit_param_a[2], fit_param_b[2], fit_param_c[2]]'''
+fit_param_abc = [fit_param_a[0], fit_param_b[0], 
+    fit_param_a[1], fit_param_b[1],
+    fit_param_a[2], fit_param_b[2], fit_param_c[0]]
+
+    
 
 # param_bc
         #minimize_2nd_order = lambda A: np.sum(np.sqrt( A[0]*self.Bx + A[1]*self.By + A[2]*self.Bz + A[3]) - self.Bmodel_long)

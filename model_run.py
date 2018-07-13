@@ -12,16 +12,20 @@ t_start = time.time()
 
 run = generate()
 run.load_dumped_file()
-#run.fft_time()
-
-run.set_range()
+#run.set_range()
+#run.fit_Bmodel()
+#run.set_range()
+run.fft()
 #run.wavelet()
 
 run.fit_Bmodel()
+'''
+run.set_range()
 
+'''
 
 #run.plot_comparisons()
-run.plot_magnetic()
+#run.plot_magnetic()
 #run.plot_position()
 #run.dump_to_file()
 
