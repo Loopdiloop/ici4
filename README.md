@@ -3,7 +3,7 @@ My summer project of 2018 working on data from magnetometer from the sounding ro
 (REPOSITORY NO. 2 SINCE I HAd A BIT OF A FIGHT WITH GIT :( :( )
 
 IS THE CODE SOMEHOW USEFUL?
-- Yes, for people working on this data specifically and probably no one else.
+- Yes, for people working on this data specifically and probably no one else. The data is not located since they are quite big files. See https://github.com/davidmmiles/ici-4 for more info about the data, the mission and the data itself.
 
 SO MARIANNE, HOW BUGGED IS IT ATM?
 - Very, I would not reccomend running it and hoping for something useful. It is also highly fragmented and sectional, so you do need a slight bit of insight into how it's built to run it succsessfully. There is also big experimental chunks and a wavelet + a time dependent "sonogram"-style plot that spews out nonsense.
