@@ -1,9 +1,10 @@
 # ici4
 My summer project of 2018 working on data from magnetometer from the sounding rocket ici-4
-(REPOSITORY NO. 2 SINCE I HAd A BIT OF A FIGHT WITH GIT :( :( )
+
+TLDR; Probably not useful unless you do this exact thing, handling some data for doing aurora research, heavily bugged and not finished.
 
 IS THE CODE SOMEHOW USEFUL?
-- Yes, for people working on this data specifically and probably no one else. The data is not located since they are quite big files. See https://github.com/davidmmiles/ici-4 for more info about the data, the mission and the data itself.
+- Yes, for people working on this data specifically and probably no one else. The data is not located here since they are quite big files. See https://github.com/davidmmiles/ici-4 for more info about the data, the mission and the data itself.
 
 SO MARIANNE, HOW BUGGED IS IT ATM?
 - Very, I would not reccomend running it and hoping for something useful. It is also highly fragmented and sectional, so you do need a slight bit of insight into how it's built to run it succsessfully. There is also big experimental chunks and a wavelet + a time dependent "sonogram"-style plot that spews out nonsense.
@@ -18,5 +19,6 @@ HOW TO RUN:
 - Run calls upon data_processing.py and/or fetching.py (or any of the other new file additions)
 - fetching.py can fetch data from the raw data files and makes .pyn-files with all the data.
 - data_processing.py contains all the actual plotting, calculating and magnetic models. Will be heavily expanded.
+- and more, will update later.
 
 It may still hard for anyone other than the author to run. Will hopefully change in the future as documentation will be made and debugging will happen. Cheers.
