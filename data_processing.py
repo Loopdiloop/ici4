@@ -200,16 +200,45 @@ class generate():
 
 
 
+    def init_fit_Bmodel(self):
+        '''
+        Naming convention of parameters: ax**3 + bx**2 + cx + d
+        Array convention 1st order: [        xc, xd,         yc, yd,         zc, zd]
+        Array convention 2nd order: [    xb, xc, xd,     yb, yc, yd,     zb, zc, zd]
+        Array convention 2nd order: [xa, xb, xc, xd, ya, yb, yc, yd, za, zb, zc, zd]
+        '''
+
+        # Initial guesses for minimization algorithm.
+        
+        self.initial_guess_1st_order = np.array([mini.XC1, 0., mini.YC1, 0., 
+            mini.ZC1, 0. ]).astype(float)
+
+        self.initial_guess_2nd_order = np.array([mini.XB1, mini.XC1, 0, mini.YB1, 
+            mini.YC1, 0, mini.ZB1, mini.ZC1, 0 ]).astype(float)
+
+        self.initial_guess_3rd_order = np.array([mini.XA1, mini.XB1, mini.XC1, 0, 
+            mini.YA1, mini.YB1, mini.YC1, 0, mini.ZA1, mini.ZB1, mini.ZC1, 
+            0 ]).astype(float)
+
+        self.initial = self.initial_guess_1st_order
+
+        self.count = 0
+
+        return None
+
+        
+
     def fit_Bmodel(self):
-        # 3rd order : ax**2 + bx + c
-
-        test_waytoogood = np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
-            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])
-
         Bx = self.Bx ; By = self.By ; Bz = self.Bz
         Bmodel_long = self.Bmodel_long
+
+        # Functions. Both summed and one array for 1D
+
         minimize_1st_order = lambda x: abs(np.sum(np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
             + (x[4]*Bz + x[5])**2) - Bmodel_long))
+
+        minimize_1st_order_array = lambda x: np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
+            + (x[4]*Bz + x[5])**2)# - Bmodel_long
         
         minimize_2nd_order = lambda x: abs(np.sum(np.sqrt((x[0]*Bx**2 + x[1]*Bx + x[2])**2 + 
             (x[3]*By**2 + x[4]*By + x[5])**2 + (x[6]*Bz**2 + x[7]*Bz + x[8])**2) - Bmodel_long))
@@ -218,41 +247,38 @@ class generate():
             (x[4]*By**3 + x[5]*By**2 + x[6]*By + x[7])**2 + 
             (x[8]*Bz**3 + x[9]*Bz**2 + x[10]*Bz + x[11])**2) - Bmodel_long))
 
+        
+        print ' Running fitting of Bmodel, %s iterations' % var.fit_niter
+        result = scipy.optimize.basinhopping(minimize_1st_order, self.initial, 
+            var.fit_niter, var.fit_T , var.fit_stepsize)
+        
+        print result
+        self.initial = result['x']
+        np.save(var.fit_datadump + '%s'%self.count, result)
+        self.count += 1
+        
+
+        '''# Initial guesses for minimization algorithm.
+        
         initial_guess_1st_order = np.array([mini.XC1, 0., mini.YC1, 0., 
             mini.ZC1, 0. ]).astype(float)
 
-        initial_guess_1st_order_David = np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
-            mini.ZC1, mini.ZD1 ]).astype(float)
-            
-        '''np.array([  5.40800596e-06,  -7.46808905e+03,   9.74210627e-04,
-        -6.92984651e+05,   1.29220637e-05,  -3.18654229e+04]) '''
+        initial_guess_2nd_order = np.array([mini.XB1, mini.XC1, 0, mini.YB1, 
+            mini.YC1, 0, mini.ZB1, mini.ZC1, 0 ]).astype(float)
+
+        initial_guess_3rd_order = np.array([mini.XA1, mini.XB1, mini.XC1, 0, 
+            mini.YA1, mini.YB1, mini.YC1, 0, mini.ZA1, mini.ZB1, mini.ZC1, 
+            0 ]).astype(float)'''
+
         
-        '''np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
-            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])'''
-        '''np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
-            mini.ZC1, mini.ZD1 ]).astype(float)'''
-
-        initial_guess_2nd_order = np.array([mini.XB1, mini.XC1, mini.XD1, mini.YB1, 
-            mini.YC1, mini.YD1, mini.ZB1, mini.ZC1, mini.ZD1 ]).astype(float)
-
-        initial_guess_3rd_order = np.array([mini.XA1, mini.XB1, mini.XC1, mini.XD1, 
-            mini.YA1, mini.YB1, mini.YC1, mini.YD1, mini.ZA1, mini.ZB1, mini.ZC1, 
-            mini.ZD1 ]).astype(float)
-
-
-
-        minimize_1st_order_full = lambda x: np.sqrt((x[0]*Bx + x[1])**2 + (x[2]*By + x[3])**2 
-            + (x[4]*Bz + x[5])**2)# - Bmodel_long
-        
-
-        self.XX = minimize_1st_order_full(initial_guess_1st_order_David)
+        '''self.XX = minimize_1st_order_array(initial_guess_1st_order_David)
         fs = 5000./ (self.t[5000] - self.t[0])
         N = len(self.B)
         B_dict = dict({'B': self.B, 'firstorder':self.XX, 'fs': fs, 'N': N})
         IO.savemat('B.mat', B_dict)
         IO.savemat('B.mat', B_dict)
         print ' saved, ok'
-        '''
+        
         ress = minimize_1st_order_full(test_waytoogood)
         plt.plot(self.t, self.B) 
         plt.plot(np.linspace(self.t[0], self.t[-1], len(ress)), ress)  
@@ -261,9 +287,7 @@ class generate():
         plt.clf()'''
         #sys.exit()
         
-        print ' Running fitting of Bmodel, %s iterations' % var.fit_niter
-        #result = scipy.optimize.basinhopping(minimize_1st_order, initial_guess_1st_order, 
-        #    var.fit_niter, var.fit_T , var.fit_stepsize)
+        
 
         '''Outout result: 
         The optimization result represented as a OptimizeResult object. 
@@ -282,8 +306,8 @@ class generate():
     def set_range(self):
         print ''' Setting range for (interesting)data '''
         self.range_set_done = True
-        start = 400 #raw_input(' Begin at time ')
-        stopp = 460 #raw_input(' End at time ')
+        start = 80 #raw_input(' Begin at time ')
+        stopp = 500 #raw_input(' End at time ')
         try:
             stab = np.argmin(abs(self.t - float(start)))
             stob = np.argmin(abs(self.t - float(stopp)))

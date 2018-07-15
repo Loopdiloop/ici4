@@ -1,5 +1,20 @@
 # Junk code
 
+
+
+
+
+test_waytoogood = np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
+            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])
+
+
+
+
+
+
+
+
+            
 #deltafit = 3 #delta allowed for finished fit
 #fit_order = 5 #order of fittings. 5 = 0th to 4th order.
 fit_param_c = [300000, 40000, 4000]
@@ -18,7 +33,7 @@ fit_param_abc = [fit_param_a[0], fit_param_b[0],
     fit_param_a[1], fit_param_b[1],
     fit_param_a[2], fit_param_b[2], fit_param_c[0]]
 
-    
+
 
 # param_bc
         #minimize_2nd_order = lambda A: np.sum(np.sqrt( A[0]*self.Bx + A[1]*self.By + A[2]*self.Bz + A[3]) - self.Bmodel_long)

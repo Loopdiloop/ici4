@@ -14,26 +14,9 @@ plot_comparison = False
 
 
 
-
 # For fitting of data-params:
-#deltafit = 3 #delta allowed for finished fit
-#fit_order = 5 #order of fittings. 5 = 0th to 4th order.
-fit_param_c = [300000, 40000, 4000]
-fit_param_b = [3, 4, 4]
-fit_param_a = [3, 4, 4]
-'''fit_param_bc = [fit_param_b[0], fit_param_c[0], 
-    fit_param_b[1], fit_param_c[1],
-    fit_param_b[2], fit_param_c[2]]'''
-fit_param_bc = [fit_param_b[0], fit_param_b[1],
-    fit_param_b[2], fit_param_c[0]]
 
-'''fit_param_abc = [fit_param_a[0], fit_param_b[0], fit_param_c[0], 
-    fit_param_a[1], fit_param_b[1], fit_param_c[1],
-    fit_param_a[2], fit_param_b[2], fit_param_c[2]]'''
-fit_param_abc = [fit_param_a[0], fit_param_b[0], 
-    fit_param_a[1], fit_param_b[1],
-    fit_param_a[2], fit_param_b[2], fit_param_c[0]]
-fit_niter = 10
+fit_niter = 2
 fit_T = 50 
 fit_stepsize = 1000
 fit_datadump = '../dump_data/Bmodel_fit'

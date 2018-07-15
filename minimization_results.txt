@@ -214,5 +214,18 @@ no t_abs, but it ok, little you
 
 
 
+From code: 
+        initial_guess_1st_order_David = np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
+            mini.ZC1, mini.ZD1 ]).astype(float)
+            
+        '''np.array([  5.40800596e-06,  -7.46808905e+03,   9.74210627e-04,
+        -6.92984651e+05,   1.29220637e-05,  -3.18654229e+04]) '''
+        
+        '''np.array([ 2.05422143e-05, -4.15690381e+04, 1.03866410e-05, 
+            -1.54944104e+04, 1.08294995e-05, -4.59599374e+04])'''
+        '''np.array([mini.XC1, mini.XD1, mini.YC1, mini.YD1, 
+            mini.ZC1, mini.ZD1 ]).astype(float)'''
 
+
+Gonna try running for real now. (Overnight later, but I'll run som trial runs.)
 
